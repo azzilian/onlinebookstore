@@ -50,7 +50,7 @@ public class BookRepositoryImpl implements BookRepository {
             Query<Book> query = session.createQuery("FROM Book", Book.class);
             return query.getResultList();
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can not find any books ", e);
+            throw new EntityNotFoundException("Can not find any books ");
         }
     }
 
@@ -70,7 +70,7 @@ public class BookRepositoryImpl implements BookRepository {
 
             return dto;
         } catch (Exception e) {
-            throw new EntityNotFoundException("Error while fetching book with id: " + id, e);
+            throw new EntityNotFoundException("Error while fetching book with id: " + id);
         }
     }
 }
