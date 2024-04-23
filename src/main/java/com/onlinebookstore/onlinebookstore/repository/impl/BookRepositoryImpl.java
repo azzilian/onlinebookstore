@@ -1,6 +1,8 @@
 package com.onlinebookstore.onlinebookstore.repository.impl;
 
+import com.onlinebookstore.onlinebookstore.dto.BookDto;
 import com.onlinebookstore.onlinebookstore.exeption.DataProcessingException;
+import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import java.util.List;
@@ -48,7 +50,27 @@ public class BookRepositoryImpl implements BookRepository {
             Query<Book> query = session.createQuery("FROM Book", Book.class);
             return query.getResultList();
         } catch (Exception e) {
-            throw new DataProcessingException("Can not find any books ", e);
+            throw new EntityNotFoundException("Can not find any books ", e);
+        }
+    }
+
+    @Override
+    public BookDto getBookById(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            String getIdSql = "SELECT new com.example.dto.BookDto(b.id, "
+                    + "b.title, b.author, b.description, b.isbn, b.coverImage, b.price) "
+                    + "FROM Book b WHERE b.id = :id";
+            BookDto dto = session.createQuery(getIdSql,BookDto.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+
+            if (dto == null) {
+                throw new EntityNotFoundException("Book not found with id: " + id);
+            }
+
+            return dto;
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Error while fetching book with id: " + id, e);
         }
     }
 }
