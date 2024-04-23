@@ -2,6 +2,7 @@ package com.onlinebookstore.onlinebookstore.service.impl;
 
 import com.onlinebookstore.onlinebookstore.dto.BookDto;
 import com.onlinebookstore.onlinebookstore.dto.CreateBookRequestDto;
+import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
@@ -32,7 +33,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto getBookById(Long id) {
-        return bookRepository.getBookById(id);
+    public BookDto findBookById(Long id) {
+        Book book = bookRepository.findBookById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find book by id" + id)
+        );
+        return bookMapper.toDto(book);
     }
 }

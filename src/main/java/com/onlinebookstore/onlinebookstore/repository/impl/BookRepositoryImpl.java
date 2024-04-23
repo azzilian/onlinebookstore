@@ -1,11 +1,11 @@
 package com.onlinebookstore.onlinebookstore.repository.impl;
 
-import com.onlinebookstore.onlinebookstore.dto.BookDto;
 import com.onlinebookstore.onlinebookstore.exeption.DataProcessingException;
 import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import java.util.List;
+import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -55,22 +55,10 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public BookDto getBookById(Long id) {
+    public Optional<Book> findBookById(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            String getIdSql = "SELECT new com.example.dto.BookDto(b.id, "
-                    + "b.title, b.author, b.description, b.isbn, b.coverImage, b.price) "
-                    + "FROM Book b WHERE b.id = :id";
-            BookDto dto = session.createQuery(getIdSql,BookDto.class)
-                    .setParameter("id", id)
-                    .uniqueResult();
-
-            if (dto == null) {
-                throw new EntityNotFoundException("Book not found with id: " + id);
-            }
-
-            return dto;
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Error while fetching book with id: " + id);
+            Book book = session.find(Book.class, id);
+            return Optional.ofNullable(book);
         }
     }
 }

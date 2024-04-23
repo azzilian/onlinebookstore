@@ -1,13 +1,13 @@
 package com.onlinebookstore.onlinebookstore.repository;
 
-import com.onlinebookstore.onlinebookstore.dto.BookDto;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository {
     Book save(Book book);
 
     List<Book> findAll();
 
-    BookDto getBookById(Long id);
+    Optional<Book> findBookById(Long id);
 }
