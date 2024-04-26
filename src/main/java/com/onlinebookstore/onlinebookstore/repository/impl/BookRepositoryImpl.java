@@ -1,7 +1,6 @@
 package com.onlinebookstore.onlinebookstore.repository.impl;
 
 import com.onlinebookstore.onlinebookstore.exeption.DataProcessingException;
-import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import java.util.List;
@@ -49,13 +48,11 @@ public class BookRepositoryImpl implements BookRepository {
         try (Session session = sessionFactory.openSession()) {
             Query<Book> query = session.createQuery("FROM Book", Book.class);
             return query.getResultList();
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Can not find any books");
         }
     }
 
     @Override
-    public Optional<Book> findBookById(Long id) {
+    public Optional<Book> findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
             Book book = session.find(Book.class, id);
             return Optional.ofNullable(book);
