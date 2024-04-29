@@ -15,8 +15,8 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE Book SET is_deleted = true WHERE id=?")
-@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE Book SET isdeleted = true WHERE id=?")
+@Where(clause = "isdeleted = false")
 public class Book {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +38,8 @@ public class Book {
 
     private String description;
 
-    private String coverImage;
+    private String coverimage;
 
     @Column(nullable = false)
-    private boolean isDeleted = false;
+    private boolean isdeleted = false;
 }
