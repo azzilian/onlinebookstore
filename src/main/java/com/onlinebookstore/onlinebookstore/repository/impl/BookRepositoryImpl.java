@@ -60,7 +60,7 @@ public class BookRepositoryImpl implements BookRepository {
             Book book = session.find(Book.class, id);
             return Optional.ofNullable(book);
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can't find book by id " + id);
+            throw new DataProcessingException("Can't find book by id " + id);
         }
     }
 }
