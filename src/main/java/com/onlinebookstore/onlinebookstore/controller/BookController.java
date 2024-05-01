@@ -1,8 +1,7 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
 import com.onlinebookstore.onlinebookstore.dto.BookDto;
-import com.onlinebookstore.onlinebookstore.dto.CreateBookRequestDto;
-import com.onlinebookstore.onlinebookstore.dto.UpdateBookRequestDto;
+import com.onlinebookstore.onlinebookstore.dto.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.service.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +34,13 @@ public class BookController {
     }
 
     @PostMapping
-    public BookDto createBook(@RequestBody CreateBookRequestDto bookDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookDto createBook(@RequestBody BookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable long id, @RequestBody UpdateBookRequestDto bookDto) {
+    public BookDto updateBook(@PathVariable long id, @RequestBody BookRequestDto bookDto) {
         return bookService.update(id, bookDto);
     }
 
