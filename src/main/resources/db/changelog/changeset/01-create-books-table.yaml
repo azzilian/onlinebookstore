@@ -12,7 +12,6 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    nullable: false
               - column:
                   name: title
                   type: varchar(255)
@@ -36,13 +35,13 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: description
-                  type: varchar(255)
+                  type: TEXT
               - column:
                   name: coverimage
-                  type: varchar(255)
+                  type: TEXT
               - column:
                   name: isdeleted
-                  type: boolean
+                  type: bit
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
