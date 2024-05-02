@@ -3,6 +3,7 @@ package com.onlinebookstore.onlinebookstore.controller;
 import com.onlinebookstore.onlinebookstore.dto.BookDto;
 import com.onlinebookstore.onlinebookstore.dto.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.service.BookService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,12 +36,12 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDto createBook(@RequestBody BookRequestDto bookDto) {
+    public BookDto createBook(@Valid @RequestBody BookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBook(@PathVariable long id, @RequestBody BookRequestDto bookDto) {
+    public BookDto updateBook(@Valid @PathVariable long id, @RequestBody BookRequestDto bookDto) {
         return bookService.update(id, bookDto);
     }
 
