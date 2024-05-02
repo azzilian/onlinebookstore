@@ -9,6 +9,8 @@ import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import com.onlinebookstore.onlinebookstore.service.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -25,11 +27,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll() {
-        List<Book> books = bookRepository.findAll();
-        if (books.isEmpty()) {
-            throw new EntityNotFoundException("Can`t find any books");
+    public List<BookDto> findAll(Pageable pageable) {
+        Page<Book> booksPage = bookRepository.findAll(pageable);
+        if (booksPage.isEmpty()) {
+            throw new EntityNotFoundException("Can't find any books");
         }
+        List<Book> books = booksPage.getContent();
         return books.stream()
                 .map(bookMapper::toDto)
                 .toList();
