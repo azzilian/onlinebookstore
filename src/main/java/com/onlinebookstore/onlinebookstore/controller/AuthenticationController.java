@@ -22,7 +22,8 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/registration")
-    @Operation(summary = "Create new User", description = "Email, password and repeatpassword cannot be empty")
+    @Operation(summary = "Create new User", description = "Email, "
+            + "password and repeatpassword cannot be empty")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto register(@RequestBody UserRegistrationRequestDto requestDto)
             throws RegistrationException {

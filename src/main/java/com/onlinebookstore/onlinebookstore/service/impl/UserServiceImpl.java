@@ -2,7 +2,6 @@ package com.onlinebookstore.onlinebookstore.service.impl;
 
 import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.user.UserResponseDto;
-import com.onlinebookstore.onlinebookstore.exeption.CustomGlobalExceptionHandler;
 import com.onlinebookstore.onlinebookstore.exeption.RegistrationException;
 import com.onlinebookstore.onlinebookstore.mapper.UserMapper;
 import com.onlinebookstore.onlinebookstore.model.User;
