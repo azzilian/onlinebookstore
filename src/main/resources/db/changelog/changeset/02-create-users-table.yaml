@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-books-table
+      id: create-users-table
       author: Vladyslav_Vyshynskyi
       changes:
         - createTable:
-            tableName: books
+            tableName: users
             columns:
               - column:
                   name: id
@@ -25,13 +25,9 @@ databaseChangeLog:
               - column:
                   name: firstname
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: lastname
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: shippingaddress
                   type: TEXT
