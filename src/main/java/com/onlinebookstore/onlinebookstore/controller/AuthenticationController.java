@@ -4,6 +4,7 @@ import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.user.UserResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.RegistrationException;
 import com.onlinebookstore.onlinebookstore.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/registration")
+    @Operation(summary = "Create new User", description = "Email, password and repeatpassword cannot be empty")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto register(@RequestBody UserRegistrationRequestDto requestDto)
             throws RegistrationException {

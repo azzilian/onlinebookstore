@@ -15,7 +15,7 @@ public class UserRegistrationRequestDto {
     @NotBlank(message = "password field cannot be empty")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "password field cannot be empty")
     private String repeatpassword;
 
     private String firstname;
