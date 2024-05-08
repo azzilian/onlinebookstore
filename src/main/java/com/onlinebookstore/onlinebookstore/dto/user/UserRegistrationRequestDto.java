@@ -2,7 +2,7 @@ package com.onlinebookstore.onlinebookstore.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;;
+import lombok.Data;
 
 @Data
 public class UserRegistrationRequestDto {
