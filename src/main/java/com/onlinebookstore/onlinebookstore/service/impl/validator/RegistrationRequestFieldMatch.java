@@ -16,8 +16,8 @@ public class RegistrationRequestFieldMatch implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         UserRegistrationRequestDto requestDto = (UserRegistrationRequestDto) target;
-        if (!requestDto.getPassword().equals(requestDto.getRepeatpassword())) {
-            errors.rejectValue("repeatpassword", "password.mismatch", "Passwords do not match");
+        if (!requestDto.getPassword().equals(requestDto.getRepeatPassword())) {
+            errors.rejectValue("repeatPassword", "password.mismatch", "Passwords do not match");
         }
     }
 }

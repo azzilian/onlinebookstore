@@ -18,7 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @SQLDelete(sql = "UPDATE users SET isdeleted = true WHERE id=?")
-@SQLRestriction("isdeleted = false")
+@SQLRestriction("is_deleted = false")
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -32,12 +32,12 @@ public class User {
     private String password;
 
     @Column(name = "firstname")
-    private String firstname;
+    private String firstName;
     @Column(name = "lastname")
-    private String lastname;
+    private String lastName;
     @Column(name = "shippingaddress")
-    private String shippingaddress;
+    private String shippingAddress;
 
     @Column(nullable = false)
-    private boolean isdeleted = false;
+    private boolean isDeleted = false;
 }

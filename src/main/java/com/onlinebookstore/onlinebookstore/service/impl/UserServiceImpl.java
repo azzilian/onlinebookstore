@@ -37,9 +37,9 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationException(errorMessage.toString());
         }
         User user = userMapper.toModel(requestDto);
-        user.setFirstname(requestDto.getFirstname());
-        user.setLastname(requestDto.getLastname());
-        user.setShippingaddress(requestDto.getShippingaddress());
+        user.setFirstName(requestDto.getFirstName());
+        user.setLastName(requestDto.getLastName());
+        user.setShippingAddress(requestDto.getShippingAddress());
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }

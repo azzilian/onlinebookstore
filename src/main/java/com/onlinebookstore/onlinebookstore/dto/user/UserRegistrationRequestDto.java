@@ -16,11 +16,11 @@ public class UserRegistrationRequestDto {
     private String password;
 
     @NotBlank(message = "password field cannot be empty")
-    private String repeatpassword;
+    private String repeatPassword;
 
-    private String firstname;
+    private String firstName;
 
-    private String lastname;
+    private String lastName;
 
-    private String shippingaddress;
+    private String shippingAddress;
 }

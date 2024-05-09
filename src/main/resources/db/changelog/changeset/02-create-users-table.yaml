@@ -32,7 +32,7 @@ databaseChangeLog:
                   name: shippingaddress
                   type: TEXT
               - column:
-                  name: isdeleted
+                  name: is_deleted
                   type: bit
                   defaultValueBoolean: false
                   constraints:

@@ -37,10 +37,10 @@ databaseChangeLog:
                   name: description
                   type: TEXT
               - column:
-                  name: coverimage
+                  name: cover_image
                   type: TEXT
               - column:
-                  name: isdeleted
+                  name: is_deleted
                   type: bit
                   defaultValueBoolean: false
                   constraints:
