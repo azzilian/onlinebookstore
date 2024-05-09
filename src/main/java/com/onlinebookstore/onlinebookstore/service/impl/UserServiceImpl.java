@@ -7,7 +7,7 @@ import com.onlinebookstore.onlinebookstore.mapper.UserMapper;
 import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.repository.UserRepository;
 import com.onlinebookstore.onlinebookstore.service.UserService;
-import com.onlinebookstore.onlinebookstore.validator.RegistrationRequestFieldMatch;
+import com.onlinebookstore.onlinebookstore.service.impl.validator.RegistrationRequestFieldMatch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;

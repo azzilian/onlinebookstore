@@ -1,4 +1,4 @@
-package com.onlinebookstore.onlinebookstore.validator;
+package com.onlinebookstore.onlinebookstore.service.impl.validator;
 
 import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import org.springframework.stereotype.Component;
