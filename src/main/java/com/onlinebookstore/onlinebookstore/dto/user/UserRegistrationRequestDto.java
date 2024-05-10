@@ -3,6 +3,7 @@ package com.onlinebookstore.onlinebookstore.dto.user;
 import com.onlinebookstore.onlinebookstore.service.impl.validator.FieldMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -16,9 +17,11 @@ public class UserRegistrationRequestDto {
     private String email;
 
     @NotBlank(message = "password field cannot be empty")
+    @Size(min = 6, max = 20)
     private String password;
 
     @NotBlank(message = "repeatPassword field cannot be empty")
+    @Size(min = 6, max = 20)
     private String repeatPassword;
 
     private String firstName;
