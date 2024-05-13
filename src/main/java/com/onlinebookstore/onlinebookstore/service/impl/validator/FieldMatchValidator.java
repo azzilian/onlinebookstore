@@ -1,8 +1,10 @@
 package com.onlinebookstore.onlinebookstore.service.impl.validator;
 
+import com.onlinebookstore.onlinebookstore.exeption.RegistrationException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.BeanWrapperImpl;
+import java.lang.reflect.Field;
+import java.util.Objects;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
     private String firstFieldName;
@@ -14,18 +16,19 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
         secondFieldName = constraintAnnotation.fieldMatch();
     }
 
-    @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        Object fieldValue = new BeanWrapperImpl(value)
-                .getPropertyValue(firstFieldName);
-        Object fieldMatchValue = new BeanWrapperImpl(value)
-                .getPropertyValue(secondFieldName);
+        try {
+            Field firstField = value.getClass().getDeclaredField(firstFieldName);
+            Field secondField = value.getClass().getDeclaredField(secondFieldName);
+            firstField.setAccessible(true);
+            secondField.setAccessible(true);
 
-        if (fieldValue != null) {
-            return fieldValue.equals(fieldMatchValue);
-        } else {
-            return fieldMatchValue == null;
+            Object fieldValue = firstField.get(value);
+            Object fieldMatchValue = secondField.get(value);
+
+            return Objects.equals(fieldValue, fieldMatchValue);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RegistrationException("Error validating fields", e);
         }
-
     }
 }
