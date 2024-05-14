@@ -6,7 +6,7 @@ import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
-import com.onlinebookstore.onlinebookstore.service.BookService;
+import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

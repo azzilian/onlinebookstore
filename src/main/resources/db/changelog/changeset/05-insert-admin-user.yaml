@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-admin-user
+      author: Vladyslav_Vyshynskyi
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "admin@example.com" }
+              - column: { name: password, value: "1234567" }
+
+  - changeSet:
+      id: assign-admin-role
+      author: Vladyslav_Vyshynskyi
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO user_roles (user_id, role_id)
+              SELECT id, (SELECT id FROM roles WHERE name = 'ROLE_ADMIN')
+              FROM users WHERE email = 'admin@example.com'

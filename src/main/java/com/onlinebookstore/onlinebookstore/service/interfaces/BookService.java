@@ -1,4 +1,4 @@
-package com.onlinebookstore.onlinebookstore.service;
+package com.onlinebookstore.onlinebookstore.service.interfaces;
 
 import com.onlinebookstore.onlinebookstore.dto.book.BookDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;

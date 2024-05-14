@@ -3,7 +3,7 @@ package com.onlinebookstore.onlinebookstore.controller;
 import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.user.UserResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.ValidationException;
-import com.onlinebookstore.onlinebookstore.service.UserService;
+import com.onlinebookstore.onlinebookstore.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
