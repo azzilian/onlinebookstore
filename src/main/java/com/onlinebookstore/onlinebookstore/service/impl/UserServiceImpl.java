@@ -13,7 +13,6 @@ import com.onlinebookstore.onlinebookstore.service.interfaces.UserService;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +35,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encryptedPassword);
 
         Role userRole = roleRepository.findByRolesName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("User Role not found."));
-
-
+                .orElseThrow(() -> new RegistationException("User Role not found."));
         Set<Role> roles = new HashSet<>();
         roles.add(userRole);
         user.setRoles(roles);
