@@ -2,7 +2,7 @@ package com.onlinebookstore.onlinebookstore.controller;
 
 import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.user.UserResponseDto;
-import com.onlinebookstore.onlinebookstore.exeption.RegistrationException;
+import com.onlinebookstore.onlinebookstore.exeption.ValidationException;
 import com.onlinebookstore.onlinebookstore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,10 +24,10 @@ public class AuthenticationController {
 
     @PostMapping("/registration")
     @Operation(summary = "Create new User",
-            description = "Email, password and repeatpassword cannot be empty")
+            description = "Create new User in DB")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto register(@Valid @RequestBody UserRegistrationRequestDto requestDto)
-            throws RegistrationException {
+            throws ValidationException {
         return userService.register(requestDto);
     }
 }

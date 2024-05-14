@@ -23,13 +23,13 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: firstname
+                  name: first_name
                   type: varchar(255)
               - column:
-                  name: lastname
+                  name: last_name
                   type: varchar(255)
               - column:
-                  name: shippingaddress
+                  name: shipping_address
                   type: TEXT
               - column:
                   name: is_deleted

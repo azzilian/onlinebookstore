@@ -24,24 +24,17 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-
     @NotBlank
     private String title;
-
     @NotBlank
     private String author;
-
     @NotBlank
     @Column(unique = true)
     private String isbn;
-
     @Column(nullable = false)
     private BigDecimal price;
-
     private String description;
-
     private String coverImage;
-
     @Column(nullable = false)
     private boolean isDeleted = false;
 }

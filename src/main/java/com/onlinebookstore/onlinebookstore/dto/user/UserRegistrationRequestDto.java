@@ -10,7 +10,6 @@ import lombok.Data;
 @FieldMatch(field = "password",
         fieldMatch = "repeatPassword",
         message = "The password fields must match")
-
 public class UserRegistrationRequestDto {
     @NotBlank(message = "email field cannot be empty")
     @Email
