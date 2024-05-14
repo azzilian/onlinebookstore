@@ -1,6 +1,6 @@
 package com.onlinebookstore.onlinebookstore.service.impl.validator;
 
-import com.onlinebookstore.onlinebookstore.exeption.RegistrationException;
+import com.onlinebookstore.onlinebookstore.exeption.ValidationException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
@@ -28,7 +28,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
 
             return Objects.equals(fieldValue, fieldMatchValue);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RegistrationException("Error validating fields", e);
+            throw new ValidationException("Error validating fields", e);
         }
     }
 }
