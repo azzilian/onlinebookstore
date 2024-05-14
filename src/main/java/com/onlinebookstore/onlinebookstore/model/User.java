@@ -83,4 +83,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return !isDeleted;
     }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }
