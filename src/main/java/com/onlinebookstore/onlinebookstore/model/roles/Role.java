@@ -28,13 +28,6 @@ public class Role implements GrantedAuthority {
     @Column(unique = true)
     private RoleName rolesName;
 
-    public Role() {
-    }
-
-    public Role(RoleName rolesName) {
-        this.rolesName = rolesName;
-    }
-
     public Long getId() {
         return id;
     }

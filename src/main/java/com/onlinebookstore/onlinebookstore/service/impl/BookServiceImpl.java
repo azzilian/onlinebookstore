@@ -27,7 +27,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll(String email,Pageable pageable) {
+    public List<BookDto> findAll(String email, Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
         if (booksPage.isEmpty()) {
             throw new EntityNotFoundException("Can't find any books");
