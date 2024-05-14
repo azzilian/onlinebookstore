@@ -12,12 +12,13 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "roles")
-public class Role {
+public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,13 +26,13 @@ public class Role {
     @NotBlank
     @Enumerated(EnumType.STRING)
     @Column(unique = true)
-    private RoleName name;
+    private RoleName rolesName;
 
     public Role() {
     }
 
-    public Role(RoleName name) {
-        this.name = name;
+    public Role(RoleName rolesName) {
+        this.rolesName = rolesName;
     }
 
     public Long getId() {
@@ -42,12 +43,17 @@ public class Role {
         this.id = id;
     }
 
-    public RoleName getName() {
-        return name;
+    public RoleName getRolesName() {
+        return rolesName;
     }
 
-    public void setName(RoleName name) {
-        this.name = name;
+    public void setRolesName(RoleName rolesName) {
+        this.rolesName = rolesName;
+    }
+
+    @Override
+    public String getAuthority() {
+        return rolesName.name();
     }
 
     @Override
@@ -59,11 +65,11 @@ public class Role {
             return false;
         }
         Role role = (Role) o;
-        return name == role.name;
+        return rolesName == role.rolesName;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(rolesName);
     }
 }

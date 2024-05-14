@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: users
             columns:
               - column: { name: email, value: "admin@example.com" }
-              - column: { name: password, value: "1234567" }
+              - column: { name: password, value: "$2a$12$piiWw3jnaS4L2mDu5xcD9ONuQAjzPfao8v2ZjsW9bn7xITaR3K3yK" }
 
   - changeSet:
       id: assign-admin-role
@@ -16,5 +16,5 @@ databaseChangeLog:
         - sql:
             sql: |
               INSERT INTO user_roles (user_id, role_id)
-              SELECT id, (SELECT id FROM roles WHERE name = 'ROLE_ADMIN')
+              SELECT id, (SELECT id FROM roles WHERE roles_name = 'ROLE_ADMIN')
               FROM users WHERE email = 'admin@example.com'
