@@ -12,7 +12,7 @@ public interface BookService {
 
     BookDto delete(Long id);
 
-    List<BookDto> findAll(Pageable pageable);
+    List<BookDto> findAll(String email,Pageable pageable);
 
     BookDto findById(Long id);
 }

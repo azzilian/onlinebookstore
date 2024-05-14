@@ -4,7 +4,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,11 +34,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/auth/**", "/error", "/swagger-ui/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/books").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/books").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/books").hasRole("ADMIN")
-                                .requestMatchers("/api/books/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/error").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
