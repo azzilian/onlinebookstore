@@ -1,5 +1,9 @@
 package com.onlinebookstore.onlinebookstore.dto.user;
 
-public class UserLoginResponseDto {
+import lombok.Data;
 
+@Data
+public class UserLoginResponseDto {
+    private Long id;
+    private String email
 }
