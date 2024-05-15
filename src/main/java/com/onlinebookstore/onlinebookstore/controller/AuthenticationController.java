@@ -32,13 +32,16 @@ public class AuthenticationController {
     @Operation(summary = "Create new User",
             description = "Create new User in DB")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserRegistrationResponseDto register(@Valid @RequestBody UserRegistrationRequestDto requestDto)
+    public UserRegistrationResponseDto register(@Valid @RequestBody
+                                                    UserRegistrationRequestDto requestDto)
             throws ValidationException {
         return userService.register(requestDto);
     }
 
     @PostMapping("/login")
     @PreAuthorize("permitAll()")
+    @Operation(summary = "Login for existing User",
+            description = "Login to system by using existing user")
     public UserLoginResponseDto login(@RequestBody UserLoginRequestDto requestDto) {
         return authenticationService.authenticate(requestDto);
     }
