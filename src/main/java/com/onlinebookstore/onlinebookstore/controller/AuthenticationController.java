@@ -1,5 +1,7 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
+import com.onlinebookstore.onlinebookstore.dto.user.UserLoginRequestDto;
+import com.onlinebookstore.onlinebookstore.dto.user.UserLoginResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.user.UserResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.ValidationException;
@@ -31,5 +33,11 @@ public class AuthenticationController {
     public UserResponseDto register(@Valid @RequestBody UserRegistrationRequestDto requestDto)
             throws ValidationException {
         return userService.register(requestDto);
+    }
+
+    @PostMapping("/login")
+    @PreAuthorize("permitAll()")
+    public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
+
     }
 }
