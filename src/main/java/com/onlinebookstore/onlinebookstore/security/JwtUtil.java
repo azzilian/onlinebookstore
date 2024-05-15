@@ -1,7 +1,6 @@
 package com.onlinebookstore.onlinebookstore.security;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,11 +14,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
-    private final Key secret;
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    private Key secret;
 
-    public JwtUtil(@Value("${jwt.scret}") String secretString) {
+    @Value("${jwt.expiration}")
+    private long expiration;
+
+    public JwtUtil(@Value("${jwt.secret}") String secretString) {
         secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -38,27 +38,23 @@ public class JwtUtil {
                     .setSigningKey(secret)
                     .build()
                     .parseClaimsJws(token);
+
             return !claimsJws.getBody().getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            e.printStackTrace();
-            throw new JwtException("Expired JWT token");
-        } catch (JwtException e) {
-            e.printStackTrace();
-            throw new JwtException("Invalid JWT token");
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtException("Expired or invalid JWT token");
         }
     }
 
-    public String getUserName(String token) {
+    public String getUsername(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsTResolver) {
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claimsTResolver.apply(claims);
+        return claimsResolver.apply(claims);
     }
-
 }
