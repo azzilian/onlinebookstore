@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private JwtUtil jwtUtil;
-    private AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     public UserLoginResponseDto authenticate(UserLoginRequestDto requestDto) {
         final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestDto.email(),
-                        requestDto.password())
+                new UsernamePasswordAuthenticationToken(requestDto.getEmail(),
+                        requestDto.getPassword())
         );
-        String token = jwtUtil.generateToken(requestDto.email());
+        String token = jwtUtil.generateToken(requestDto.getEmail());
         return new UserLoginResponseDto(token);
     }
 }
