@@ -1,4 +1,4 @@
-package com.onlinebookstore.onlinebookstore.service;
+package com.onlinebookstore.onlinebookstore.service.interfaces;
 
 import com.onlinebookstore.onlinebookstore.dto.book.BookDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
@@ -12,7 +12,7 @@ public interface BookService {
 
     BookDto delete(Long id);
 
-    List<BookDto> findAll(Pageable pageable);
+    List<BookDto> findAll(String email, Pageable pageable);
 
     BookDto findById(Long id);
 }

@@ -1,6 +1,6 @@
 package com.onlinebookstore.onlinebookstore.dto.user;
 
-import com.onlinebookstore.onlinebookstore.service.impl.validator.FieldMatch;
+import com.onlinebookstore.onlinebookstore.service.interfaces.FieldMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

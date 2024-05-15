@@ -2,12 +2,18 @@ package com.onlinebookstore.onlinebookstore.service.impl;
 
 import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.user.UserResponseDto;
-import com.onlinebookstore.onlinebookstore.exeption.ValidationException;
+import com.onlinebookstore.onlinebookstore.exeption.RegistationException;
 import com.onlinebookstore.onlinebookstore.mapper.UserMapper;
 import com.onlinebookstore.onlinebookstore.model.User;
+import com.onlinebookstore.onlinebookstore.model.roles.Role;
+import com.onlinebookstore.onlinebookstore.model.roles.RoleName;
+import com.onlinebookstore.onlinebookstore.repository.RoleRepository;
 import com.onlinebookstore.onlinebookstore.repository.UserRepository;
-import com.onlinebookstore.onlinebookstore.service.UserService;
+import com.onlinebookstore.onlinebookstore.service.interfaces.UserService;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,14 +21,25 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new ValidationException("Cannot register user with this email - "
+            throw new RegistationException("Cannot register user with this email - "
                     + "user already exists");
         }
         User user = userMapper.toModel(requestDto);
+        String encryptedPassword = passwordEncoder.encode(requestDto.getPassword());
+        user.setPassword(encryptedPassword);
+
+        Role userRole = roleRepository.findByRolesName(RoleName.ROLE_USER)
+                .orElseThrow(() -> new RegistationException("User Role not found."));
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+        user.setRoles(roles);
+
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }

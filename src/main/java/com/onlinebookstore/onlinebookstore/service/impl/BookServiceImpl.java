@@ -6,7 +6,7 @@ import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
-import com.onlinebookstore.onlinebookstore.service.BookService;
+import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,7 +27,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll(Pageable pageable) {
+    public List<BookDto> findAll(String email, Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
         if (booksPage.isEmpty()) {
             throw new EntityNotFoundException("Can't find any books");
