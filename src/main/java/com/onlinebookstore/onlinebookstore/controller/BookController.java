@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +32,7 @@ public class BookController {
 
     @GetMapping
     @Operation(summary = "Find All Books", description = "Find All Books in DB")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<BookDto> getAll(Authentication authentication, Pageable pageable) {
         User user = (User) authentication.getPrincipal();
         return bookService.findAll(user.getEmail(), pageable);
@@ -41,9 +40,8 @@ public class BookController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Find Book by id", description = "Find Book by id")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public BookDto findById(@PathVariable Long id,Authentication authentication) {
-        authentication = SecurityContextHolder.getContext().getAuthentication();
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public BookDto findById(@PathVariable Long id, Authentication authentication) {
         return bookService.findById(id);
     }
 
