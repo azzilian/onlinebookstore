@@ -41,7 +41,7 @@ public class BookController {
     @GetMapping("/{id}")
     @Operation(summary = "Find Book by id", description = "Find Book by id")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public BookDto findById(@PathVariable Long id, Authentication authentication) {
+    public BookDto findById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
