@@ -1,7 +1,7 @@
 package com.onlinebookstore.onlinebookstore.service.impl;
 
 import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationRequestDto;
-import com.onlinebookstore.onlinebookstore.dto.user.UserResponseDto;
+import com.onlinebookstore.onlinebookstore.dto.user.UserRegistrationResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.RegistationException;
 import com.onlinebookstore.onlinebookstore.mapper.UserMapper;
 import com.onlinebookstore.onlinebookstore.model.User;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponseDto register(UserRegistrationRequestDto requestDto) {
+    public UserRegistrationResponseDto register(UserRegistrationRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new RegistationException("Cannot register user with this email - "
                     + "user already exists");
