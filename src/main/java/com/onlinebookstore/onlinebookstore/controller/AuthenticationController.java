@@ -39,10 +39,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    @PreAuthorize("permitAll()")
     @Operation(summary = "Login for existing User",
             description = "Login to system by using existing user")
-    public UserLoginResponseDto login(@RequestBody UserLoginRequestDto requestDto) {
+    public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto requestDto) {
         return authenticationService.authenticate(requestDto);
     }
 }
