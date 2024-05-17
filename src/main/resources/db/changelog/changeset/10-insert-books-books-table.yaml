@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books-books-table
+      author: Vladyslav_Vyshynskyi
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Dragon Lance" }
+              - column: { name: description, value: "Adventures of Red Wizard" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Men in Black" }
+              - column: { name: description, value: "Do you like books more that films, than this book is for you" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Java8 Forever" }
+              - column: { name: description, value: "Undying classic which will help you even today" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Dungeons and Dragons 5e DM guide" }
+              - column: { name: description, value: "Gather you friends or find new one and venture for an adventure" }

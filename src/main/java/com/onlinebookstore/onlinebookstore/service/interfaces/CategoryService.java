@@ -1,5 +1,6 @@
 package com.onlinebookstore.onlinebookstore.service.interfaces;
 
+import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.category.CategoryRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.category.CategoryResponseDto;
 import org.springframework.data.domain.Pageable;
@@ -7,13 +8,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CategoryService {
-    CategoryResponseDto save(CategoryRequestDto requestDto);
+    CategoryResponseDto getById(Long id);
 
-    CategoryResponseDto update(Long id, CategoryRequestDto requestDto);
+    List<CategoryResponseDto> findAll(Pageable pageable);
 
-    CategoryResponseDto delete(Long id);
+    List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(Long id, Pageable pageable);
 
-    List<CategoryResponseDto> findAll(String email, Pageable pageable);
+    CategoryResponseDto saveCategory(CategoryRequestDto requestDto);
 
-    CategoryResponseDto findById(Long id)
+    CategoryResponseDto updateCategoryById(Long id, CategoryRequestDto requestDto);
+
+    void deleteCategoryById(Long id);
 }

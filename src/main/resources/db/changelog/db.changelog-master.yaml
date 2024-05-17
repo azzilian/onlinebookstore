@@ -16,6 +16,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/08-create-books_categories-table.yaml
   - include:
-      file: db/changelog/changeset/07-create-categories-table.yaml
+      file: db/changelog/changeset/09-insert-categories-categories-table.yaml
   - include:
-      file: db/changelog/changeset/08-create-books_categories-table.yaml
+      file: db/changelog/changeset/10-insert-books-books-table.yaml
+  - include:
+      file: db/changelog/changeset/11-insert-id-books_categories-table.yaml

@@ -10,6 +10,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,5 +46,5 @@ public class Book {
             joinColumns = @JoinColumn(name = "books_id"),
             inverseJoinColumns = @JoinColumn(name = "categories_id")
     )
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 }
