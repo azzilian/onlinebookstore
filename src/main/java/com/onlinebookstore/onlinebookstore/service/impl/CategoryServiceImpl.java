@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(Long id, Pageable pageable) {
         Category category = findByIdOrThrowException(id);
-        List<Book> books = bookRepository.findAllByCategoryId(id, pageable);
+        List<Book> books = bookRepository.findAllByCategoriesId(id, pageable);
         if (books.isEmpty()) {
             throw new EntityNotFoundException("Can't find any books for category id " + id);
         }

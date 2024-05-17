@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findAllByCategoryId(Long categoryId, Pageable pageable);
+    List<Book> findAllByCategoriesId(Long categoryId, Pageable pageable);
 }
