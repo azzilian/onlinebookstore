@@ -6,12 +6,12 @@ import com.onlinebookstore.onlinebookstore.dto.category.CategoryResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
 import com.onlinebookstore.onlinebookstore.mapper.CategoryMapper;
-import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.model.Category;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import com.onlinebookstore.onlinebookstore.repository.CategoryRepository;
 import com.onlinebookstore.onlinebookstore.service.interfaces.CategoryService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,19 +40,20 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryPage.getContent();
         return categories.stream()
                 .map(categoryMapper::toDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(Long id, Pageable pageable) {
         Category category = findByIdOrThrowException(id);
-        List<Book> books = bookRepository.findAllByCategoriesId(id, pageable);
+        List<BookDtoWithoutCategoriesIds> books = bookRepository
+                .findAllByCategoriesId(id, pageable).stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .collect(Collectors.toList());
         if (books.isEmpty()) {
             throw new EntityNotFoundException("Can't find any books for category id " + id);
         }
-        return books.stream()
-                .map(bookMapper::toDtoWithoutCategories)
-                .toList();
+        return books;
     }
 
     @Override
@@ -79,6 +80,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     private Category findByIdOrThrowException(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't find book by id " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Can't find category by id " + id));
     }
 }

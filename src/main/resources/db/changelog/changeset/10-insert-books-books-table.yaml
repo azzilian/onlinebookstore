@@ -39,3 +39,12 @@ databaseChangeLog:
               - column: { name: price, value: "41.99" }
               - column: { name: description, value: "Gather you friends or find new one and venture for an adventure" }
               - column: { name: cover_image, value: "https://example.com/updated-cover-image.jpg" }
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Dungeons and Dragons 5e PHB" }
+              - column: { name: author, value: "Wizards of the Coast" }
+              - column: { name: isbn, value: " 978-0-393-04545-2" }
+              - column: { name: price, value: "41.99" }
+              - column: { name: description, value: "Gather you friends or find new one and venture for an adventure" }
+              - column: { name: cover_image, value: "https://example.com/updated-cover-image.jpg" }

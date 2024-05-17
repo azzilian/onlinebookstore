@@ -23,3 +23,8 @@ databaseChangeLog:
             columns:
               - column: { name: book_id, valueComputed: (SELECT id FROM books WHERE title = 'Dungeons and Dragons 5e DM guide') }
               - column: { name: category_id, valueComputed: (SELECT id FROM categories WHERE name = 'TableTopGames') }
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueComputed: (SELECT id FROM books WHERE title = 'Dungeons and Dragons 5e PHB') }
+              - column: { name: category_id, valueComputed: (SELECT id FROM categories WHERE name = 'TableTopGames') }
