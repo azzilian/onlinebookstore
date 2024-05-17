@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "api/categories")
 public class CategoryController {
-    private CategoryService categoryService;
-    private BookService bookService;
+    private final CategoryService categoryService;
+    private final BookService bookService;
 
     @GetMapping
     @Operation(summary = "Find All Categories", description = "Find All existing Categories in DB")

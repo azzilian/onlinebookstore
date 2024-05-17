@@ -23,7 +23,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "books")
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE books SET isdeleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id=?")
 @SQLRestriction("is_deleted = false")
 public class Book {
 
@@ -44,7 +44,7 @@ public class Book {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "books_categories",
             joinColumns = @JoinColumn(name = "book_id"),

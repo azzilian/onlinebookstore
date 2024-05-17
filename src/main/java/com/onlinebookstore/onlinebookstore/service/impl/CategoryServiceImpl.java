@@ -33,12 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponseDto> findAll(String string, Pageable pageable) {
-        Page<Category> categoryPage = categoryRepository.findAll(pageable);
-        if (categoryPage.isEmpty()) {
-            throw new EntityNotFoundException("Can't find any categories");
-        }
-        List<Category> categories = categoryPage.getContent();
-        return categories.stream()
+        return categoryRepository.findAll(pageable).stream()
                 .map(categoryMapper::toDto)
                 .collect(Collectors.toList());
     }
