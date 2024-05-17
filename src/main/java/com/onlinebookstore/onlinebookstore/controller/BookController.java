@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,9 +66,11 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete Book from DB by id", description = "Delete book from DB by id"
-            + " if it present,otherwise exception will be thrown")
-    public void deleteBook(@PathVariable Long id) {
+    @Operation(summary = "Delete Book from DB by id",
+            description = "Delete book from DB by id if it present,"
+                    + " otherwise exception will be thrown")
+    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
         bookService.delete(id);
+        return ResponseEntity.ok("Book successfully deleted");
     }
 }

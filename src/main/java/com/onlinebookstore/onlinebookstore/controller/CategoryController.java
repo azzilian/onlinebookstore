@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -84,7 +85,8 @@ public class CategoryController {
     @Operation(summary = "Delete Category from DB by id",
             description = "Delete Category from DB by id"
             + " if it present,otherwise exception will be thrown")
-    public void deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
+        return ResponseEntity.ok("Category successfully deleted");
     }
 }

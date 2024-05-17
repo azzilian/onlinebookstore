@@ -13,7 +13,6 @@ import com.onlinebookstore.onlinebookstore.service.interfaces.CategoryService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

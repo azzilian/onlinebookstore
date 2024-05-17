@@ -10,7 +10,7 @@ public interface BookService {
 
     BookResponseDto update(Long id, BookRequestDto requestDto);
 
-    BookResponseDto delete(Long id);
+    void delete(Long id);
 
     List<BookResponseDto> findAll(String email, Pageable pageable);
 

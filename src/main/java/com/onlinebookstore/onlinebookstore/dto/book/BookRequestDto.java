@@ -17,7 +17,7 @@ public class BookRequestDto {
     @Size(min = 1, message = "author name should be at least 1 character")
     private String author;
     @NotNull(message = "ISBN field cannot be empty")
-//    @ISBN(message = "Invalid ISBN format")
+    @ISBN(message = "Invalid ISBN format")
     private String isbn;
     @NotNull(message = "price field cannot be empty")
     @Min(value = 0, message = "price cannot be lover than 0")

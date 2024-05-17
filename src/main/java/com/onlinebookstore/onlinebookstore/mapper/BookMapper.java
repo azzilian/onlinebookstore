@@ -6,7 +6,6 @@ import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.model.Category;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
