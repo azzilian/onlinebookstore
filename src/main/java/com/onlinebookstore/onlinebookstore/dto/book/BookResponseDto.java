@@ -13,5 +13,5 @@ public class BookResponseDto {
     private BigDecimal price;
     private String description;
     private String coverImage;
-    private Set<Long> categoryId;
+    private Set<Long> categoryIds;
 }

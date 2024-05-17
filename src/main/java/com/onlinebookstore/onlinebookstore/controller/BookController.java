@@ -1,7 +1,7 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
-import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
+import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,14 +49,16 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new Book", description = "Create new Book in DB")
-    public BookResponseDto createBook(@Valid @RequestBody BookRequestDto bookDto) {
+    public BookResponseDto createBook(@Valid @RequestBody
+                                          BookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "Change Book data", description = "Change book data by finding book by id")
-    public BookResponseDto updateBook(@Valid @PathVariable long id, @RequestBody BookRequestDto bookDto) {
+    public BookResponseDto updateBook(@Valid @PathVariable long id,
+                                      @RequestBody BookRequestDto bookDto) {
         return bookService.update(id, bookDto);
     }
 

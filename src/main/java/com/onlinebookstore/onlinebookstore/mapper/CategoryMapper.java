@@ -9,6 +9,7 @@ import org.mapstruct.MappingTarget;
 public interface CategoryMapper {
     @Mapping(target = "id", ignore = true)
     Category toModel(CategoryRequestDto requestDto);
+
     CategoryResponseDto toDto(Category category);
 
     void updateFromDto(CategoryRequestDto updateDto, @MappingTarget Category category);

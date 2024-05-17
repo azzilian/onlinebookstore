@@ -1,7 +1,7 @@
 package com.onlinebookstore.onlinebookstore.dto.book;
 
-import lombok.Data;
 import java.math.BigDecimal;
+import lombok.Data;
 
 @Data
 public class BookDtoWithoutCategoriesIds {
