@@ -1,18 +1,19 @@
 package com.onlinebookstore.onlinebookstore.service.interfaces;
 
-import com.onlinebookstore.onlinebookstore.dto.book.BookDto;
+import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
-    BookDto save(BookRequestDto requestDto);
+    BookResponseDto save(BookRequestDto requestDto);
 
-    BookDto update(Long id, BookRequestDto requestDto);
+    BookResponseDto update(Long id, BookRequestDto requestDto);
 
-    BookDto delete(Long id);
+    BookResponseDto delete(Long id);
 
-    List<BookDto> findAll(String email, Pageable pageable);
+    List<BookResponseDto> findAll(String email, Pageable pageable);
 
-    BookDto findById(Long id);
+    BookResponseDto findById(Long id);
 }

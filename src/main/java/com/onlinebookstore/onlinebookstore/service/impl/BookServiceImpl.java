@@ -1,6 +1,6 @@
 package com.onlinebookstore.onlinebookstore.service.impl;
 
-import com.onlinebookstore.onlinebookstore.dto.book.BookDto;
+import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
@@ -20,14 +20,14 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public BookDto save(BookRequestDto requestDto) {
+    public BookResponseDto save(BookRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
         Book savedBook = bookRepository.save(book);
         return bookMapper.toDto(savedBook);
     }
 
     @Override
-    public List<BookDto> findAll(String email, Pageable pageable) {
+    public List<BookResponseDto> findAll(String email, Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
         if (booksPage.isEmpty()) {
             throw new EntityNotFoundException("Can't find any books");
@@ -39,13 +39,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto findById(Long id) {
+    public BookResponseDto findById(Long id) {
         Book book = findByIdOrThrowException(id);
         return bookMapper.toDto(book);
     }
 
     @Override
-    public BookDto update(Long id, BookRequestDto requestDto) {
+    public BookResponseDto update(Long id, BookRequestDto requestDto) {
         Book book = findByIdOrThrowException(id);
         bookMapper.updateFromDto(requestDto, book);
         Book updatedBook = bookRepository.save(book);
@@ -53,7 +53,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto delete(Long id) {
+    public BookResponseDto delete(Long id) {
         Book book = findByIdOrThrowException(id);
         bookRepository.delete(book);
         return bookMapper.toDto(book);

@@ -1,6 +1,6 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
-import com.onlinebookstore.onlinebookstore.dto.book.BookDto;
+import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
@@ -33,7 +33,7 @@ public class BookController {
     @GetMapping
     @Operation(summary = "Find All Books", description = "Find All Books in DB")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public List<BookDto> getAll(Authentication authentication, Pageable pageable) {
+    public List<BookResponseDto> getAll(Authentication authentication, Pageable pageable) {
         User user = (User) authentication.getPrincipal();
         return bookService.findAll(user.getEmail(), pageable);
     }
@@ -41,7 +41,7 @@ public class BookController {
     @GetMapping("/{id}")
     @Operation(summary = "Find Book by id", description = "Find Book by id")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public BookDto findById(@PathVariable Long id) {
+    public BookResponseDto findById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
@@ -49,14 +49,14 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new Book", description = "Create new Book in DB")
-    public BookDto createBook(@Valid @RequestBody BookRequestDto bookDto) {
+    public BookResponseDto createBook(@Valid @RequestBody BookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "Change Book data", description = "Change book data by finding book by id")
-    public BookDto updateBook(@Valid @PathVariable long id, @RequestBody BookRequestDto bookDto) {
+    public BookResponseDto updateBook(@Valid @PathVariable long id, @RequestBody BookRequestDto bookDto) {
         return bookService.update(id, bookDto);
     }
 
