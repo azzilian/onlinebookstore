@@ -16,16 +16,20 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "categories")
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE categories SET isdeleted = true WHERE id=?")
-@SQLRestriction("is_deleted = false")
+@SQLDelete(sql = "UPDATE categories SET deleted_already = true WHERE id=?")
+@SQLRestriction("deleted_already = false")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     @Column(unique = true)
     private String name;
+
     private String description;
-    @Column(nullable = false)
-    private boolean isDeleted = false;
+
+    @Column(name = "deleted_already", nullable = false)
+    private boolean deletedAlready = false;
 }
+

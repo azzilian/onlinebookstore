@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
@@ -41,10 +42,11 @@ public class Book {
     private String coverImage;
     @Column(nullable = false)
     private boolean isDeleted = false;
+    @ManyToMany
     @JoinTable(
-            name = "books_categories",
-            joinColumns = @JoinColumn(name = "books_id"),
-            inverseJoinColumns = @JoinColumn(name = "categories_id")
+            name = "book_categories",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
 }

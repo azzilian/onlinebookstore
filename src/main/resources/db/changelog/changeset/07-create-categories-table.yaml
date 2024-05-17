@@ -21,7 +21,7 @@ databaseChangeLog:
                   name: description
                   type: TEXT
               - column:
-                  name: is_deleted
+                  name: deleted_already
                   type: bit
                   defaultValueBoolean: false
                   constraints:
