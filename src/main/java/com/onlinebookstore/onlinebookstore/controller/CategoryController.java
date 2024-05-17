@@ -46,7 +46,7 @@ public class CategoryController {
     @Operation(summary = "Find Books by Category id", description = "Find books with specific Category id")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<BookResponseDto> getBooksByCategoryId(@PathVariable Long id) {
-        return bookService.findById(id);
+        return bookService.findAll();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
