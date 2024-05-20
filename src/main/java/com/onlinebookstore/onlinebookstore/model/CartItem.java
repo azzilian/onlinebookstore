@@ -29,5 +29,4 @@ public class CartItem {
     private Book book;
     @NotBlank
     private int quantity;
-
 }
