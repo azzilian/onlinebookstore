@@ -10,6 +10,7 @@ import com.onlinebookstore.onlinebookstore.model.Category;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import com.onlinebookstore.onlinebookstore.repository.CategoryRepository;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -98,16 +99,8 @@ public class BookServiceImpl implements BookService {
     }
 
     private void setCategories(Book book, Set<Long> categoryIds) {
-        if (categoryIds != null && !categoryIds.isEmpty()) {
-            Set<Category> categories = categoryIds.stream()
-                    .map(categoryId -> categoryRepository.findById(categoryId)
-                            .orElseThrow(()
-                                    -> new EntityNotFoundException("Category not found with id "
-                                    + categoryId)))
-                    .collect(Collectors.toSet());
-            book.setCategories(categories);
-        } else {
-            book.setCategories(null);
-        }
+        Set<Category> categorySet = new HashSet<>(categoryRepository.findAllById(categoryIds));
+        book.setCategories(categorySet);
+
     }
 }
