@@ -40,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto updateById(Long id, CategoryRequestDto requestDto) {
+    public CategoryResponseDto update(Long id, CategoryRequestDto requestDto) {
         Category category = findByIdOrThrowException(id);
         categoryMapper.updateFromDto(requestDto, category);
         Category updatedCategory = categoryRepository.save(category);
@@ -48,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto deleteById(Long id) {
+    public CategoryResponseDto delete(Long id) {
         Category category = findByIdOrThrowException(id);
         categoryRepository.delete(category);
         return categoryMapper.toDto(category);

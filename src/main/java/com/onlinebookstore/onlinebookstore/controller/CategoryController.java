@@ -13,7 +13,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,8 +36,8 @@ public class CategoryController {
     @GetMapping
     @Operation(summary = "Find All Categories", description = "Find All existing Categories in DB")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public List<CategoryResponseDto> getAllCategories(Authentication authentication,
-                                                      Pageable pageable) {
+    public List<CategoryResponseDto> getAll(Authentication authentication,
+                                            Pageable pageable) {
         User user = (User) authentication.getPrincipal();
         return categoryService.findAll(user.getEmail(), pageable);
     }
@@ -76,7 +75,7 @@ public class CategoryController {
             description = "Change book data by finding book by id")
     public CategoryResponseDto updateCategory(@Valid @PathVariable long id,
                                           @RequestBody CategoryRequestDto categoryRequestDto) {
-        return categoryService.updateById(id, categoryRequestDto);
+        return categoryService.update(id, categoryRequestDto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -85,8 +84,7 @@ public class CategoryController {
     @Operation(summary = "Delete Category from DB by id",
             description = "Delete Category from DB by id"
             + " if it present,otherwise exception will be thrown")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteById(id);
-        return ResponseEntity.ok("Category successfully deleted");
+    public void deleteCategory(@PathVariable Long id) {
+        categoryService.delete(id);
     }
 }

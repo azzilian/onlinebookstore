@@ -12,7 +12,7 @@ public interface CategoryService {
 
     CategoryResponseDto save(CategoryRequestDto requestDto);
 
-    CategoryResponseDto updateById(Long id, CategoryRequestDto requestDto);
+    CategoryResponseDto update(Long id, CategoryRequestDto requestDto);
 
-    CategoryResponseDto deleteById(Long id);
+    CategoryResponseDto delete(Long id);
 }
