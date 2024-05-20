@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -44,7 +45,8 @@ public class Book {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
     @JoinTable(
             name = "books_categories",
             joinColumns = @JoinColumn(name = "book_id"),

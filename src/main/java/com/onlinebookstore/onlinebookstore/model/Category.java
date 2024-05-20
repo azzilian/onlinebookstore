@@ -2,6 +2,7 @@ package com.onlinebookstore.onlinebookstore.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,7 +35,6 @@ public class Category {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();
 }
-

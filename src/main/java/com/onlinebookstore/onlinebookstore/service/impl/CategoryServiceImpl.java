@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(Long id, Pageable pageable) {
+    public List<BookDtoWithoutCategoriesIds> getBooksById(Long id, Pageable pageable) {
         Category category = findByIdOrThrowException(id);
         List<BookDtoWithoutCategoriesIds> books = bookRepository
                 .findAllByCategoriesId(id, pageable).stream()
@@ -51,14 +51,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto saveCategory(CategoryRequestDto requestDto) {
+    public CategoryResponseDto save(CategoryRequestDto requestDto) {
         Category category = categoryMapper.toModel(requestDto);
         Category savedCategory = categoryRepository.save(category);
         return categoryMapper.toDto(savedCategory);
     }
 
     @Override
-    public CategoryResponseDto updateCategoryById(Long id, CategoryRequestDto requestDto) {
+    public CategoryResponseDto updateById(Long id, CategoryRequestDto requestDto) {
         Category category = findByIdOrThrowException(id);
         categoryMapper.updateFromDto(requestDto, category);
         Category updatedCategory = categoryRepository.save(category);
@@ -66,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto deleteCategoryById(Long id) {
+    public CategoryResponseDto deleteById(Long id) {
         Category category = findByIdOrThrowException(id);
         categoryRepository.delete(category);
         return categoryMapper.toDto(category);

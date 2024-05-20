@@ -11,11 +11,11 @@ public interface CategoryService {
 
     List<CategoryResponseDto> findAll(String string, Pageable pageable);
 
-    List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(Long id, Pageable pageable);
+    List<BookDtoWithoutCategoriesIds> getBooksById(Long id, Pageable pageable);
 
-    CategoryResponseDto saveCategory(CategoryRequestDto requestDto);
+    CategoryResponseDto save(CategoryRequestDto requestDto);
 
-    CategoryResponseDto updateCategoryById(Long id, CategoryRequestDto requestDto);
+    CategoryResponseDto updateById(Long id, CategoryRequestDto requestDto);
 
-    CategoryResponseDto deleteCategoryById(Long id);
+    CategoryResponseDto deleteById(Long id);
 }

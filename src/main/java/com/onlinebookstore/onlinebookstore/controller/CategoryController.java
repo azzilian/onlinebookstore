@@ -57,7 +57,7 @@ public class CategoryController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(@PathVariable Long id,
                                                                   Pageable pageable) {
-        return categoryService.getBooksByCategoryId(id, pageable);
+        return categoryService.getBooksById(id, pageable);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -67,7 +67,7 @@ public class CategoryController {
             description = "Create new Category in DB")
     public CategoryResponseDto createCategory(@Valid @RequestBody
                                                   CategoryRequestDto categoryRequestDto) {
-        return categoryService.saveCategory(categoryRequestDto);
+        return categoryService.save(categoryRequestDto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -76,7 +76,7 @@ public class CategoryController {
             description = "Change book data by finding book by id")
     public CategoryResponseDto updateCategory(@Valid @PathVariable long id,
                                           @RequestBody CategoryRequestDto categoryRequestDto) {
-        return categoryService.updateCategoryById(id, categoryRequestDto);
+        return categoryService.updateById(id, categoryRequestDto);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -86,7 +86,7 @@ public class CategoryController {
             description = "Delete Category from DB by id"
             + " if it present,otherwise exception will be thrown")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategoryById(id);
+        categoryService.deleteById(id);
         return ResponseEntity.ok("Category successfully deleted");
     }
 }
