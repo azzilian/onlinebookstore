@@ -1,5 +1,6 @@
 package com.onlinebookstore.onlinebookstore.service.interfaces;
 
+import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import java.util.List;
@@ -15,4 +16,6 @@ public interface BookService {
     List<BookResponseDto> findAll(String email, Pageable pageable);
 
     BookResponseDto findById(Long id);
+
+    List<BookDtoWithoutCategoriesIds> getBooksById(Long id, Pageable pageable);
 }

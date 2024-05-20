@@ -57,7 +57,7 @@ public class CategoryController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(@PathVariable Long id,
                                                                   Pageable pageable) {
-        return categoryService.getBooksById(id, pageable);
+        return bookService.getBooksById(id, pageable);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
