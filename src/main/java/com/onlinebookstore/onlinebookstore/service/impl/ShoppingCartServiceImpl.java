@@ -78,7 +78,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new EntityNotFoundException("User not found with id " + userId);
         }
         ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setUserId(userId);
+        shoppingCart.setUser(shoppingCart.getUser());
         shoppingCartRepository.save(shoppingCart);
         return shoppingCart;
     }
