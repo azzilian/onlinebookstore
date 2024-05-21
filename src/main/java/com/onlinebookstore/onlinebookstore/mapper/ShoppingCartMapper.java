@@ -7,9 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(config = MapperConfig.class)
-//@Mapper(componentModel = "spring", uses = {CartItemMapper.class})
 public interface ShoppingCartMapper {
-
-    @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "userId", target = "userId")
     ShoppingCartResponseDto toResponseDto(ShoppingCart shoppingCart);
 }
