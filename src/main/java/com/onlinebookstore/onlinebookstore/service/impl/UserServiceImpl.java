@@ -9,6 +9,7 @@ import com.onlinebookstore.onlinebookstore.model.roles.Role;
 import com.onlinebookstore.onlinebookstore.model.roles.RoleName;
 import com.onlinebookstore.onlinebookstore.repository.RoleRepository;
 import com.onlinebookstore.onlinebookstore.repository.UserRepository;
+import com.onlinebookstore.onlinebookstore.service.interfaces.ShoppingCartService;
 import com.onlinebookstore.onlinebookstore.service.interfaces.UserService;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final ShoppingCartService shoppingCartService;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -41,6 +43,8 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
 
         User savedUser = userRepository.save(user);
+        shoppingCartService.createShoppingCartForUser(savedUser.getId());
+
         return userMapper.toDto(savedUser);
     }
 }
