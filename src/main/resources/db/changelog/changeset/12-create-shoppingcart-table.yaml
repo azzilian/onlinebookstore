@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Vladyslav_Vyshynskyi
       changes:
         - createTable:
-            tableName: shopingcarts
+            tableName: shoppingcarts
             columns:
               - column:
                   name: id
