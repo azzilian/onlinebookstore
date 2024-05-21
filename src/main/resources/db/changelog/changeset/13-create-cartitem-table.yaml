@@ -12,6 +12,7 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
                   name: shoppingcart_id
                   type: bigint
@@ -29,14 +30,12 @@ databaseChangeLog:
                     nullable: false
             foreignKeyConstraints:
               - foreignKeyConstraint:
-                  baseTableName: cartitems
                   baseColumnNames: shoppingcart_id
-                  referencesTableName: shopingcarts
-                  referencesColumnNames: id
-                  onDelete: CASCADE
-              - foreignKeyConstraint:
                   baseTableName: cartitems
+                  referencedColumnNames: id
+                  referencedTableName: shoppingcarts
+              - foreignKeyConstraint:
                   baseColumnNames: book_id
-                  referencesTableName: books
-                  referencesColumnNames: id
-                  onDelete: CASCADE
+                  baseTableName: cartitems
+                  referencedColumnNames: id
+                  referencedTableName: books

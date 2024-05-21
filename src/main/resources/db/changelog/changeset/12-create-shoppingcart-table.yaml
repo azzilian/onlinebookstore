@@ -19,7 +19,7 @@ databaseChangeLog:
                     nullable: false
             foreignKeyConstraints:
               - foreignKeyConstraint:
-                  baseTableName: shopingcarts
+                  baseTableName: shoppingcarts
                   baseColumnNames: user_id
                   referencesTableName: users
                   referencesColumnNames: id

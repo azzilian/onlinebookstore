@@ -19,32 +19,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/carts")
 public class ShoppingCartController {
-    private final ShoppingCartService cartService;
+    private final ShoppingCartService shoppingCartService;
 
-    @PostMapping("/{id}/items")
+    @PostMapping
     public ResponseEntity<ShoppingCartResponseDto> addBookToCart(
-            @PathVariable Long id,
+            @RequestParam Long userId,
             @RequestBody CartItemRequestDto cartItemRequestDto) {
-        ShoppingCartResponseDto response = cartService.addBookToCart(id, cartItemRequestDto);
+        ShoppingCartResponseDto response = shoppingCartService
+                .addBookToCart(userId, cartItemRequestDto);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ShoppingCartResponseDto> getCartById(@PathVariable Long id) {
-        ShoppingCartResponseDto cart = cartService.getCartByUser(id);
+    @GetMapping
+    public ResponseEntity<ShoppingCartResponseDto> getCartByUser(@RequestParam Long userId) {
+        ShoppingCartResponseDto cart = shoppingCartService.getCartByUser(userId);
         return ResponseEntity.ok(cart);
     }
 
-    @PutMapping("/items/{cartItemId}")
+    @PutMapping("/cart-items/{cartItemId}")
     public ResponseEntity<ShoppingCartResponseDto> updateCartItem(@PathVariable Long cartItemId,
                                                                   @RequestParam int quantity) {
-        ShoppingCartResponseDto response = cartService.updateCartItem(cartItemId, quantity);
+        ShoppingCartResponseDto response = shoppingCartService.updateCartItem(cartItemId, quantity);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/items/{cartItemId}")
+    @DeleteMapping("/cart-items/{cartItemId}")
     public ResponseEntity<Void> removeBookFromCart(@PathVariable Long cartItemId) {
-        cartService.removeBookFromCart(cartItemId);
+        shoppingCartService.removeBookFromCart(cartItemId);
         return ResponseEntity.ok().build();
     }
 }
