@@ -2,12 +2,12 @@ package com.onlinebookstore.onlinebookstore.service.impl;
 
 import com.onlinebookstore.onlinebookstore.dto.shoppingcart.CartItemRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
+import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.mapper.CartItemMapper;
 import com.onlinebookstore.onlinebookstore.mapper.ShoppingCartMapper;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.model.CartItem;
 import com.onlinebookstore.onlinebookstore.model.ShoppingCart;
-import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import com.onlinebookstore.onlinebookstore.repository.CartItemRepository;
 import com.onlinebookstore.onlinebookstore.repository.ShoppingCartRepository;
@@ -74,11 +74,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCart createShoppingCartForUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+        if (!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("User not found with id " + userId);
+        }
         ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setUser(user);
-        return shoppingCartRepository.save(shoppingCart);
+        shoppingCart.setUserId(userId);
+        shoppingCartRepository.save(shoppingCart);
+        return shoppingCart;
     }
 }
