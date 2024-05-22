@@ -71,15 +71,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDtoWithoutCategoriesIds> getBooksById(Long id, Pageable pageable) {
+    public List<BookDtoWithoutCategoriesIds> getBooksByCategoryId(Long id, Pageable pageable) {
         Category category = categoryService.findByIdOrThrowException(id);
         List<BookDtoWithoutCategoriesIds> books = bookRepository
                 .findAllByCategoriesId(id, pageable).stream()
                 .map(bookMapper::toDtoWithoutCategories)
                 .collect(Collectors.toList());
-        if (books.isEmpty()) {
-            throw new EntityNotFoundException("Can't find any books for category id " + id);
-        }
         return books;
     }
 
@@ -89,21 +86,11 @@ public class BookServiceImpl implements BookService {
     }
 
     private void setCategories(Book book, Set<Long> categoryIds) {
-        for (Long categoryId : categoryIds) {
-            if (categoryId > Long.MAX_VALUE) {
-                throw new InvalidCategoryIdException("Category ID "
-                        + categoryId
-                        + " exceeds the maximum allowed value.");
-            }
-        }
         Set<Category> categorySet = new HashSet<>(categoryRepository.findAllById(categoryIds));
         if (categorySet.size() != categoryIds.size()) {
-            Set<Long> foundCategoryIds = categorySet.stream()
-                    .map(Category::getId)
-                    .collect(Collectors.toSet());
-            Set<Long> invalidCategoryIds = new HashSet<>(categoryIds);
-            invalidCategoryIds.removeAll(foundCategoryIds);
-            throw new InvalidCategoryIdException("Invalid category IDs: " + invalidCategoryIds);
+            throw new InvalidCategoryIdException("Category IDs "
+                    + categoryIds
+                    + " does not exist");
         }
         book.setCategories(categorySet);
     }
