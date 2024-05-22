@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories-categories-table
+      author: Vladyslav_Vyshynskyi
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Fantasy" }
+              - column: { name: description, value: "Enter the worlds of magic and myths" }
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Sci-Fi" }
+              - column: { name: description, value: "High technology and adventure into the distant future" }
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "Educational" }
+              - column: { name: description, value: "Time to improve yourself with books from this shelf" }
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: name, value: "TableTopGames" }
+              - column: { name: description, value: "Read&Play with your company" }

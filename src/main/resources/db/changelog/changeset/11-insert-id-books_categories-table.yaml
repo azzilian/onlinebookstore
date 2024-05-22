@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-id-books_categories-table
+      author: Vladyslav_Vyshynskyi
+      changes:
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueComputed: (SELECT id FROM books WHERE title = 'Dragon Lance') }
+              - column: { name: category_id, valueComputed: (SELECT id FROM categories WHERE name = 'Fantasy') }
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueComputed: (SELECT id FROM books WHERE title = 'Men in Black') }
+              - column: { name: category_id, valueComputed: (SELECT id FROM categories WHERE name = 'Sci-Fi') }
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueComputed: (SELECT id FROM books WHERE title = 'Java8 Forever') }
+              - column: { name: category_id, valueComputed: (SELECT id FROM categories WHERE name = 'Educational') }
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueComputed: (SELECT id FROM books WHERE title = 'Dungeons and Dragons 5e DM guide') }
+              - column: { name: category_id, valueComputed: (SELECT id FROM categories WHERE name = 'TableTopGames') }
+        - insert:
+            tableName: books_categories
+            columns:
+              - column: { name: book_id, valueComputed: (SELECT id FROM books WHERE title = 'Dungeons and Dragons 5e PHB') }
+              - column: { name: category_id, valueComputed: (SELECT id FROM categories WHERE name = 'TableTopGames') }
