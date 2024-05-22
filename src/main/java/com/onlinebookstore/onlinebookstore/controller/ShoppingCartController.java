@@ -6,10 +6,8 @@ import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,41 +24,43 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public ShoppingCartResponseDto getCartByUser() {
-        Long userId = getCurrentUserId();
-        return shoppingCartService.getCartByUser(userId);
+    @Operation(summary = "get all books from users cart",
+            description = "GET request, as result you will see - "
+                    + " Cart Id, current user Id"
+                    + "SET of cartItems with books Id, quantity in cart"
+                    + " and titles")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ShoppingCartResponseDto getCartByUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return shoppingCartService.getCartByUser(user.getId());
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "Add book to the shopping cart",
-            description = "Add a book to the user's shopping cart")
-    public ShoppingCartResponseDto addBookToCart(
+            description = "Add a book to SET cartItems")
+    public ShoppingCartResponseDto addBookToCart(Authentication authentication,
             @RequestBody CartItemRequestDto cartItemRequestDto) {
-        Long userId = getCurrentUserId();
+        User user = (User) authentication.getPrincipal();
         return shoppingCartService
-                .addBookToCart(userId, cartItemRequestDto);
+                .addBookToCart(user.getId(), cartItemRequestDto);
     }
 
     @PutMapping("/cart-items/{cartItemId}")
-    public ResponseEntity<ShoppingCartResponseDto> updateCartItem(
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "Change quantity of books in cart",
+            description = "Put using quantity : int to change quantity")
+    public ShoppingCartResponseDto updateCartItem(
             @PathVariable Long cartItemId, @RequestBody CartItemRequestDto cartItemRequestDto) {
-        ShoppingCartResponseDto response = shoppingCartService
+        return  shoppingCartService
                 .updateCartItem(cartItemId, cartItemRequestDto.getQuantity());
-        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/cart-items/{cartItemId}")
-    public ResponseEntity<Void> removeBookFromCart(@PathVariable Long cartItemId) {
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "Delete Book from cart",
+            description = "Delete cartItem by Id")
+    public void removeBookFromCart(@PathVariable Long cartItemId) {
         shoppingCartService.removeBookFromCart(cartItemId);
-        return ResponseEntity.ok().build();
-    }
-
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return ((User) userDetails).getId();
-        }
-        throw new RuntimeException("User not authenticated");
     }
 }
