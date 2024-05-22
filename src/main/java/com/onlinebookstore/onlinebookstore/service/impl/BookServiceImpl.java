@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
+    private static final long MAX_CATEGORY_ID = 999_999_999_999_999L;
+
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookMapper bookMapper;
@@ -89,6 +91,13 @@ public class BookServiceImpl implements BookService {
     }
 
     private void setCategories(Book book, Set<Long> categoryIds) {
+        for (Long categoryId : categoryIds) {
+            if (categoryId.compareTo(MAX_CATEGORY_ID) > 0) {
+                throw new InvalidCategoryIdException("Category ID "
+                        + categoryId
+                        + " exceeds the maximum allowed value.");
+            }
+        }
         Set<Category> categorySet = new HashSet<>(categoryRepository.findAllById(categoryIds));
         if (categorySet.size() != categoryIds.size()) {
             Set<Long> foundCategoryIds = categorySet.stream()
