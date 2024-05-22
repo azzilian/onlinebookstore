@@ -36,7 +36,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         logger.info("Fetching cart for user with id {}", userId);
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId)
                 .orElseGet(() -> createShoppingCartForUser(userId));
-        return shoppingCartMapper.toResponseDto(shoppingCart);
+        return shoppingCartMapper.toDto(shoppingCart);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.getCartItems().add(cartItem);
         shoppingCart = shoppingCartRepository.save(shoppingCart);
 
-        return shoppingCartMapper.toResponseDto(shoppingCart);
+        return shoppingCartMapper.toDto(shoppingCart);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
 
-        return shoppingCartMapper.toResponseDto(cartItem.getShoppingCart());
+        return shoppingCartMapper.toDto(cartItem.getShoppingCart());
     }
 
     @Override

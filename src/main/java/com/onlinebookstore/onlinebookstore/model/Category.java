@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,5 +35,5 @@ public class Category {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
-    private Set<Book> books = new HashSet<>();
+    private Set<Book> books;
 }

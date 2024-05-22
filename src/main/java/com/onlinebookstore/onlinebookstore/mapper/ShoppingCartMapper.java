@@ -6,8 +6,10 @@ import com.onlinebookstore.onlinebookstore.model.ShoppingCart;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, uses = CartItemMapper.class)
 public interface ShoppingCartMapper {
-    @Mapping(source = "user.id", target = "userId")
-    ShoppingCartResponseDto toResponseDto(ShoppingCart shoppingCart);
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "cartItems", source = "cartItems", qualifiedByName = "fromItemsToDto")
+    ShoppingCartResponseDto toDto(ShoppingCart shoppingCart);
+
 }
