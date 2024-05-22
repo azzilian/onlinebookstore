@@ -5,6 +5,7 @@ import com.onlinebookstore.onlinebookstore.dto.shoppingcart.ShoppingCartResponse
 import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/cart")
+@Tag(name = "Shopping cart management", description = "Endpoints to manage shopping cart")
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
