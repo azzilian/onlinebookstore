@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryResponseDto> findAll(String string, Pageable pageable) {
+    public List<CategoryResponseDto> findAll(Pageable pageable) {
         return categoryRepository.findAll(pageable).stream()
                 .map(categoryMapper::toDto)
                 .collect(Collectors.toList());
@@ -54,7 +54,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toDto(category);
     }
 
-    private Category findByIdOrThrowException(Long id) {
+    @Override
+    public Category findByIdOrThrowException(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find category by id " + id));
     }

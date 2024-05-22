@@ -1,8 +1,8 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
+import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
-import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,9 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +32,8 @@ public class BookController {
     @GetMapping
     @Operation(summary = "Find All Books", description = "Find All Books in DB")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public List<BookResponseDto> getAll(Authentication authentication, Pageable pageable) {
-        User user = (User) authentication.getPrincipal();
-        return bookService.findAll(user.getEmail(), pageable);
+    public List<BookDtoWithoutCategoriesIds> getAll(Pageable pageable) {
+        return bookService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
@@ -58,8 +55,8 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "Change Book data", description = "Change book data by finding book by id")
-    public BookResponseDto updateBook(@Valid @PathVariable long id,
-                                      @RequestBody BookRequestDto bookDto) {
+    public BookResponseDto updateBook(@PathVariable long id,
+                                      @Valid @RequestBody BookRequestDto bookDto) {
         return bookService.update(id, bookDto);
     }
 
@@ -69,8 +66,7 @@ public class BookController {
     @Operation(summary = "Delete Book from DB by id",
             description = "Delete book from DB by id if it present,"
                     + " otherwise exception will be thrown")
-    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
+    public void deleteBook(@PathVariable Long id) {
         bookService.delete(id);
-        return ResponseEntity.ok("Book successfully deleted");
     }
 }
