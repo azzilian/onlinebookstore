@@ -73,8 +73,8 @@ public class CategoryController {
     @PutMapping("/{id}")
     @Operation(summary = "Change Category name",
             description = "Change book data by finding book by id")
-    public CategoryResponseDto updateCategory(@Valid @PathVariable long id,
-                                          @RequestBody CategoryRequestDto categoryRequestDto) {
+    public CategoryResponseDto updateCategory(@PathVariable Long id,
+               @Valid @RequestBody CategoryRequestDto categoryRequestDto) {
         return categoryService.update(id, categoryRequestDto);
     }
 
