@@ -10,6 +10,7 @@ import com.onlinebookstore.onlinebookstore.model.Category;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import com.onlinebookstore.onlinebookstore.repository.CategoryRepository;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
+import com.onlinebookstore.onlinebookstore.service.interfaces.CategoryService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookMapper bookMapper;
+    private final CategoryService categoryService;
 
     @Override
     public BookResponseDto save(BookRequestDto requestDto) {
@@ -48,13 +50,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookResponseDto findById(Long id) {
-        Book book = findByIdOrThrowException(id, Book.class);
+        Book book = findByIdOrThrowException(id);
         return bookMapper.toDto(book);
     }
 
     @Override
     public BookResponseDto update(Long id, BookRequestDto requestDto) {
-        Book book = findByIdOrThrowException(id, Book.class);
+        Book book = findByIdOrThrowException(id);
         bookMapper.updateFromDto(requestDto, book);
         setCategories(book, requestDto.getCategoryIds());
         Book updatedBook = bookRepository.save(book);
@@ -63,16 +65,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void delete(Long id) {
-        if (bookRepository.existsById(id)) {
-            bookRepository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException("Book not found");
-        }
+        findByIdOrThrowException(id);
+        bookRepository.deleteById(id);
     }
 
     @Override
     public List<BookDtoWithoutCategoriesIds> getBooksById(Long id, Pageable pageable) {
-        Category category = findByIdOrThrowException(id, Category.class);
+        Category category = categoryService.findByIdOrThrowException(id);
         List<BookDtoWithoutCategoriesIds> books = bookRepository
                 .findAllByCategoriesId(id, pageable).stream()
                 .map(bookMapper::toDtoWithoutCategories)
@@ -83,24 +82,13 @@ public class BookServiceImpl implements BookService {
         return books;
     }
 
-    private <T> T findByIdOrThrowException(Long id, Class<T> entityClass) {
-        if (entityClass.equals(Book.class)) {
-            return (T) bookRepository.findById(id)
-                    .orElseThrow(()
-                            -> new EntityNotFoundException("Can't find book by id " + id));
-        } else if (entityClass.equals(Category.class)) {
-            return (T) categoryRepository.findById(id)
-                    .orElseThrow(()
-                            -> new EntityNotFoundException("Can't find category by id " + id));
-        } else {
-            throw new IllegalArgumentException("Unsupported entity class: "
-                    + entityClass.getName());
-        }
+    private Book findByIdOrThrowException(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find category by id " + id));
     }
 
     private void setCategories(Book book, Set<Long> categoryIds) {
         Set<Category> categorySet = new HashSet<>(categoryRepository.findAllById(categoryIds));
         book.setCategories(categorySet);
-
     }
 }
