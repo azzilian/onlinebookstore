@@ -4,6 +4,7 @@ import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
+import com.onlinebookstore.onlinebookstore.exeption.InvalidCategoryIdException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.model.Category;
@@ -89,6 +90,14 @@ public class BookServiceImpl implements BookService {
 
     private void setCategories(Book book, Set<Long> categoryIds) {
         Set<Category> categorySet = new HashSet<>(categoryRepository.findAllById(categoryIds));
+        if (categorySet.size() != categoryIds.size()) {
+            Set<Long> foundCategoryIds = categorySet.stream()
+                    .map(Category::getId)
+                    .collect(Collectors.toSet());
+            Set<Long> invalidCategoryIds = new HashSet<>(categoryIds);
+            invalidCategoryIds.removeAll(foundCategoryIds);
+            throw new InvalidCategoryIdException("Invalid category IDs: " + invalidCategoryIds);
+        }
         book.setCategories(categorySet);
     }
 }
