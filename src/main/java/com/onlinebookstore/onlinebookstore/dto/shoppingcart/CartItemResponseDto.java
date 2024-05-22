@@ -1,11 +1,9 @@
 package com.onlinebookstore.onlinebookstore.dto.shoppingcart;
 
-import lombok.Data;
-
-@Data
-public class CartItemResponseDto {
-    private Long id;
-    private Long bookId;
-    private String bookTitle;
-    private int quantity;
+public record CartItemResponseDto(
+        Long id,
+        Long bookId,
+        String bookTitle,
+        int quantity
+) {
 }

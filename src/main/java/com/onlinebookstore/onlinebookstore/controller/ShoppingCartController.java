@@ -2,7 +2,6 @@ package com.onlinebookstore.onlinebookstore.controller;
 
 import com.onlinebookstore.onlinebookstore.dto.shoppingcart.CartItemRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
-import com.onlinebookstore.onlinebookstore.model.ShoppingCart;
 import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,21 +26,19 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public ResponseEntity<ShoppingCartResponseDto> getCartByUser() {
+    public ShoppingCartResponseDto getCartByUser() {
         Long userId = getCurrentUserId();
-        ShoppingCartResponseDto cart = shoppingCartService.getCartByUser(userId);
-        return ResponseEntity.ok(cart);
+        return shoppingCartService.getCartByUser(userId);
     }
 
     @PostMapping
     @Operation(summary = "Add book to the shopping cart",
             description = "Add a book to the user's shopping cart")
-    public ResponseEntity<ShoppingCartResponseDto> addBookToCart(
+    public ShoppingCartResponseDto addBookToCart(
             @RequestBody CartItemRequestDto cartItemRequestDto) {
         Long userId = getCurrentUserId();
-        ShoppingCartResponseDto response = shoppingCartService
+        return shoppingCartService
                 .addBookToCart(userId, cartItemRequestDto);
-        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/cart-items/{cartItemId}")
