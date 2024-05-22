@@ -5,6 +5,7 @@ import com.onlinebookstore.onlinebookstore.dto.shoppingcart.ShoppingCartResponse
 import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -40,7 +41,7 @@ public class ShoppingCartController {
     @Operation(summary = "Add book to the shopping cart",
             description = "Add a book to SET cartItems")
     public ShoppingCartResponseDto addBookToCart(Authentication authentication,
-            @RequestBody CartItemRequestDto cartItemRequestDto) {
+            @Valid @RequestBody CartItemRequestDto cartItemRequestDto) {
         User user = (User) authentication.getPrincipal();
         return shoppingCartService
                 .addBookToCart(user.getId(), cartItemRequestDto);
@@ -51,8 +52,9 @@ public class ShoppingCartController {
     @Operation(summary = "Change quantity of books in cart",
             description = "Put using quantity : int to change quantity")
     public ShoppingCartResponseDto updateCartItem(
-            @PathVariable Long cartItemId, @RequestBody CartItemRequestDto cartItemRequestDto) {
-        return  shoppingCartService
+            @PathVariable Long cartItemId,
+            @Valid @RequestBody CartItemRequestDto cartItemRequestDto) {
+        return shoppingCartService
                 .updateCartItem(cartItemId, cartItemRequestDto.getQuantity());
     }
 
