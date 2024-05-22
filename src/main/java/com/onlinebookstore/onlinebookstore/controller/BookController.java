@@ -1,8 +1,8 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
+import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
-import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,9 +32,8 @@ public class BookController {
     @GetMapping
     @Operation(summary = "Find All Books", description = "Find All Books in DB")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public List<BookResponseDto> getAll(Authentication authentication, Pageable pageable) {
-        User user = (User) authentication.getPrincipal();
-        return bookService.findAll(user.getEmail(), pageable);
+    public List<BookDtoWithoutCategoriesIds> getAll(Pageable pageable) {
+        return bookService.findAll(pageable);
     }
 
     @GetMapping("/{id}")

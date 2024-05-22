@@ -35,14 +35,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookResponseDto> findAll(String email, Pageable pageable) {
+    public List<BookDtoWithoutCategoriesIds> findAll(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
         if (booksPage.isEmpty()) {
             throw new EntityNotFoundException("Can't find any books");
         }
         List<Book> books = booksPage.getContent();
         return books.stream()
-                .map(bookMapper::toDto)
+                .map(bookMapper::toDtoWithoutCategories)
                 .toList();
     }
 
