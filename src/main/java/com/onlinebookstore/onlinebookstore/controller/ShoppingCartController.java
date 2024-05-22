@@ -32,14 +32,14 @@ public class ShoppingCartController {
                     + " Cart Id, current user Id"
                     + "SET of cartItems with books Id, quantity in cart"
                     + " and titles")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ShoppingCartResponseDto getCartByUser(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return shoppingCartService.getCartByUser(user.getId());
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Add book to the shopping cart",
             description = "Add a book to SET cartItems")
     public ShoppingCartResponseDto addBookToCart(Authentication authentication,
@@ -50,7 +50,7 @@ public class ShoppingCartController {
     }
 
     @PutMapping("/cart-items/{cartItemId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Change quantity of books in cart",
             description = "Put using quantity : int to change quantity")
     public ShoppingCartResponseDto updateCartItem(
@@ -61,7 +61,7 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping("/cart-items/{cartItemId}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Delete Book from cart",
             description = "Delete cartItem by Id")
     public void removeBookFromCart(@PathVariable Long cartItemId) {
