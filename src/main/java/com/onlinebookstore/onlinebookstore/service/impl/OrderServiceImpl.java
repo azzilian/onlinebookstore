@@ -16,6 +16,7 @@ import com.onlinebookstore.onlinebookstore.repository.OrderRepository;
 import com.onlinebookstore.onlinebookstore.repository.ShoppingCartRepository;
 import com.onlinebookstore.onlinebookstore.repository.UserRepository;
 import com.onlinebookstore.onlinebookstore.service.interfaces.OrderService;
+import com.onlinebookstore.onlinebookstore.service.interfaces.ShoppingCartService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -32,18 +33,17 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
+    private final ShoppingCartService shoppingCartService;
 
     @Override
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto) {
         User user = userRepository.findById(orderRequestDto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User not found with id: "
-                        + orderRequestDto.getUserId()));
+                        "User not found with id: " + orderRequestDto.getUserId()));
 
         ShoppingCart cart = shoppingCartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Shopping cart not found for user id: "
-                                + user.getId()));
+                        "Shopping cart not found for user id: " + user.getId()));
 
         Order order = orderMapper.toModel(orderRequestDto);
         order.setUser(user);
@@ -58,8 +58,7 @@ public class OrderServiceImpl implements OrderService {
                     return orderItem;
                 }).collect(Collectors.toSet()));
         order.setTotal(cart.getCartItems().stream()
-                .map(cartItem -> cartItem
-                        .getBook()
+                .map(cartItem -> cartItem.getBook()
                         .getPrice()
                         .multiply(BigDecimal
                                 .valueOf(cartItem
@@ -70,7 +69,8 @@ public class OrderServiceImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        cart.getCartItems().clear();
+        cart.getCartItems().forEach(cartItem -> shoppingCartService
+                .removeBookFromCart(cartItem.getId()));
         shoppingCartRepository.save(cart);
 
         return orderMapper.toDto(savedOrder);
@@ -89,16 +89,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDto updateOrderStatus(Long orderId, OrderUpdateStatusDto orderUpdateStatusDto) {
+    public OrderResponseDto updateOrderStatus(Long orderId,
+                                              OrderUpdateStatusDto orderUpdateStatusDto) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
-        System.out.println("Updating order status to: " + orderUpdateStatusDto.getOrderStatus());
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: "
+                        + orderId));
+        System.out.println("Updating order status to: "
+                + orderUpdateStatusDto.getOrderStatus());
 
         order.setOrderStatus(orderUpdateStatusDto.getOrderStatus());
 
         if (order.getOrderStatus() == OrderStatus.COMPLETED) {
             ShoppingCart cart = shoppingCartRepository.findByUserId(order.getUser().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found for user id: " + order.getUser().getId()));
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "Shopping cart not found for user id: "
+                            + order.getUser().getId()));
             cart.getCartItems().clear();
             shoppingCartRepository.save(cart);
         }

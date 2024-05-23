@@ -48,7 +48,8 @@ public class OrderController {
     public ResponseEntity<OrderResponseDto> updateOrderStatus(
             @PathVariable Long orderId,
             @RequestBody OrderUpdateStatusDto orderUpdateStatusDto) {
-        OrderResponseDto updatedOrder = orderService.updateOrderStatus(orderId, orderUpdateStatusDto);
+        OrderResponseDto updatedOrder = orderService.updateOrderStatus(orderId,
+                orderUpdateStatusDto);
         return ResponseEntity.ok(updatedOrder);
     }
 
