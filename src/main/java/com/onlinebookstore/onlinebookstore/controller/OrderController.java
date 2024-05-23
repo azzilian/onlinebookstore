@@ -42,11 +42,11 @@ public class OrderController {
     }
 
     @PatchMapping("/{orderId}")
-    @PreAuthorize("hasRole = ('ADMIN')")
-    public OrderResponseDto updateOrderStatus(
+    public ResponseEntity<OrderResponseDto> updateOrderStatus(
             @PathVariable Long orderId,
             @RequestBody OrderUpdateStatusDto orderUpdateStatusDto) {
-        return orderService.updateOrderStatus(orderId, orderUpdateStatusDto);
+        OrderResponseDto updatedOrder = orderService.updateOrderStatus(orderId, orderUpdateStatusDto);
+        return ResponseEntity.ok(updatedOrder);
     }
 
     @GetMapping("/{orderId}/items")

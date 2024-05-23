@@ -89,20 +89,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDto updateOrderStatus(Long orderId,
-                                              OrderUpdateStatusDto orderUpdateStatusDto) {
+    public OrderResponseDto updateOrderStatus(Long orderId, OrderUpdateStatusDto orderUpdateStatusDto) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Order not found with id: "
-                        + orderId));
+                .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
+        System.out.println("Updating order status to: " + orderUpdateStatusDto.getOrderStatus());
 
         order.setOrderStatus(orderUpdateStatusDto.getOrderStatus());
 
         if (order.getOrderStatus() == OrderStatus.COMPLETED) {
             ShoppingCart cart = shoppingCartRepository.findByUserId(order.getUser().getId())
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            "Shopping cart not found for user id: "
-                                    + order.getUser().getId()));
+                    .orElseThrow(() -> new EntityNotFoundException("Shopping cart not found for user id: " + order.getUser().getId()));
             cart.getCartItems().clear();
             shoppingCartRepository.save(cart);
         }
