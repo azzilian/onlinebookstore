@@ -10,9 +10,8 @@ import lombok.Data;
 public class OrderResponseDto {
     private Long id;
     private Long userId;
-    private Set<OrderItemResponseDto> cartItems;
+    private Set<OrderItemResponseDto> orderItems;
     private LocalDateTime orderDate;
     private BigDecimal total;
     private OrderStatus orderStatus;
 }
-

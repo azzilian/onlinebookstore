@@ -2,6 +2,7 @@ package com.onlinebookstore.onlinebookstore.dto.order;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
@@ -11,4 +12,5 @@ public class OrderItemRequestDto {
     @NotNull(message = "quantity field cannot be empty")
     @Min(value = 1, message = "minimal quantity is at least 1")
     private int quantity;
+    private BigDecimal price;
 }

@@ -1,6 +1,7 @@
 package com.onlinebookstore.onlinebookstore.model.orders;
 
 import com.onlinebookstore.onlinebookstore.model.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,7 +52,7 @@ public class Order {
     @Column(nullable = false)
     private String shippingAddress;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems;
 
     @Column(name = "is_deleted", nullable = false)
