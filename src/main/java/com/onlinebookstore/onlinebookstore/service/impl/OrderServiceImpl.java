@@ -81,10 +81,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Set<OrderResponseDto> getOrderHistory(Long userId) {
-        Set<Order> orders = orderRepository.findByUserId(userId);
+    public Set<OrderResponseDto> getOrderHistory(User user) {
+        Set<Order> orders = orderRepository.findByUser(user);
         if (orders.isEmpty()) {
-            throw new EntityNotFoundException("No orders found for user id: " + userId);
+            throw new EntityNotFoundException("No orders found for user id: " + user.getId());
         }
         return orders.stream()
                 .map(orderMapper::toDto)

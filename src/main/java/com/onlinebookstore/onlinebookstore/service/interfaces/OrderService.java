@@ -5,13 +5,15 @@ import com.onlinebookstore.onlinebookstore.dto.order.OrderRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.order.OrderResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.order.OrderUpdateStatusDto;
 import java.util.Set;
+
+import com.onlinebookstore.onlinebookstore.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface OrderService {
     OrderResponseDto placeOrder(OrderRequestDto orderRequestDto);
 
-    Set<OrderResponseDto> getOrderHistory(Long userId);
+    Set<OrderResponseDto> getOrderHistory(User user);
 
     OrderResponseDto updateOrderStatus(Long orderId, OrderUpdateStatusDto orderUpdateStatusDto);
 
