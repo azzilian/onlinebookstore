@@ -52,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderMapper.toModel(orderRequestDto);
         order.setUser(user);
+        order.setOrderStatus(OrderStatus.PENDING);
         order.setOrderItems(cart.getCartItems().stream()
                 .map(cartItem -> {
                     OrderItem orderItem = new OrderItem();

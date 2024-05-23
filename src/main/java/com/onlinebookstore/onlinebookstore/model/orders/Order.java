@@ -18,6 +18,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -38,7 +40,7 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus orderStatus;
