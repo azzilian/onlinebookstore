@@ -26,6 +26,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<OrderResponseDto> placeOrder(
             @RequestBody OrderRequestDto orderRequestDto,
             @AuthenticationPrincipal User user) {
@@ -35,6 +36,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Set<OrderResponseDto>> getOrderHistory(
             @AuthenticationPrincipal User user) {
         Set<OrderResponseDto> orderHistory = orderService.getOrderHistory(user);
@@ -42,6 +44,7 @@ public class OrderController {
     }
 
     @PatchMapping("/{orderId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponseDto> updateOrderStatus(
             @PathVariable Long orderId,
             @RequestBody OrderUpdateStatusDto orderUpdateStatusDto) {
@@ -50,6 +53,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}/items")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Set<OrderItemResponseDto>> getOrderItems(
             @PathVariable Long orderId) {
         Set<OrderItemResponseDto> orderItems = orderService.getOrderItems(orderId);
@@ -57,6 +61,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}/items/{itemId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<OrderItemResponseDto> getOrderItem(
             @PathVariable Long orderId,
             @PathVariable Long itemId) {
