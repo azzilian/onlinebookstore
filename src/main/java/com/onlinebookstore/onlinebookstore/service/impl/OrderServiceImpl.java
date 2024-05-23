@@ -18,7 +18,6 @@ import com.onlinebookstore.onlinebookstore.repository.UserRepository;
 import com.onlinebookstore.onlinebookstore.service.interfaces.OrderService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,18 +36,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto) {
         User user = userRepository.findById(orderRequestDto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: "
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User not found with id: "
                         + orderRequestDto.getUserId()));
-
-        Optional<Order> uncompletedOrder = orderRepository
-                .findByUserIdAndOrderStatus(user.getId(), OrderStatus.PENDING);
-        if (uncompletedOrder.isPresent()) {
-            throw new IllegalStateException("User already has an uncompleted order.");
-        }
 
         ShoppingCart cart = shoppingCartRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Shopping cart not found for user id: " + user.getId()));
+                        "Shopping cart not found for user id: "
+                                + user.getId()));
 
         Order order = orderMapper.toModel(orderRequestDto);
         order.setUser(user);
@@ -85,7 +80,8 @@ public class OrderServiceImpl implements OrderService {
     public Set<OrderResponseDto> getOrderHistory(User user) {
         Set<Order> orders = orderRepository.findByUser(user);
         if (orders.isEmpty()) {
-            throw new EntityNotFoundException("No orders found for user id: " + user.getId());
+            throw new EntityNotFoundException("No orders found for user id: "
+                    + user.getId());
         }
         return orders.stream()
                 .map(orderMapper::toDto)
@@ -97,12 +93,13 @@ public class OrderServiceImpl implements OrderService {
                                               OrderUpdateStatusDto orderUpdateStatusDto) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Order not found with id: " + orderId));
+                        "Order not found with id: "
+                        + orderId));
+
         order.setOrderStatus(orderUpdateStatusDto.getOrderStatus());
 
         if (order.getOrderStatus() == OrderStatus.COMPLETED) {
-            ShoppingCart cart = shoppingCartRepository
-                    .findByUserId(order.getUser().getId())
+            ShoppingCart cart = shoppingCartRepository.findByUserId(order.getUser().getId())
                     .orElseThrow(() -> new EntityNotFoundException(
                             "Shopping cart not found for user id: "
                                     + order.getUser().getId()));
