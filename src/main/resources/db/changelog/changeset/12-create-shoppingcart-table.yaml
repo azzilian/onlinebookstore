@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-shoppingcart-table
+      author: Vladyslav_Vyshynskyi
+      changes:
+        - createTable:
+            tableName: shoppingcarts
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+            foreignKeyConstraints:
+              - foreignKeyConstraint:
+                  baseTableName: shoppingcarts
+                  baseColumnNames: user_id
+                  referencesTableName: users
+                  referencesColumnNames: id
+                  onDelete: CASCADE

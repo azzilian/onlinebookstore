@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-cartitem-table
+      author: Vladyslav_Vyshynskyi
+      changes:
+        - createTable:
+            tableName: cartitems
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: shoppingcart_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: book_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+            foreignKeyConstraints:
+              - foreignKeyConstraint:
+                  baseColumnNames: shoppingcart_id
+                  baseTableName: cartitems
+                  referencedColumnNames: id
+                  referencedTableName: shoppingcarts
+                  constraintName: fk_cartitems_shoppingcarts
+              - foreignKeyConstraint:
+                  baseColumnNames: book_id
+                  baseTableName: cartitems
+                  referencedColumnNames: id
+                  referencedTableName: books
+                  constraintName: fk_cartitems_books

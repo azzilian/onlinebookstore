@@ -17,6 +17,7 @@ import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -26,27 +27,37 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id=?")
 @SQLRestriction("is_deleted = false")
+@EqualsAndHashCode
+@ToString
 public class Book {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+
     @NotBlank
     private String title;
+
     @NotBlank
     private String author;
+
     @NotBlank
     @Column(unique = true)
     private String isbn;
+
     @Column(nullable = false)
     private BigDecimal price;
+
     private String description;
+
     private String coverImage;
+
     @Column(nullable = false)
     private boolean isDeleted = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JoinTable(
             name = "books_categories",
             joinColumns = @JoinColumn(name = "book_id"),
