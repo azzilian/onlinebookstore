@@ -17,8 +17,8 @@ import lombok.ToString;
 @Setter
 @Getter
 @Table(name = "cartitems")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
+@ToString
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
