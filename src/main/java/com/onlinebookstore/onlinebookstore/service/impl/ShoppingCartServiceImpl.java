@@ -47,7 +47,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseGet(() -> createShoppingCartForUser(userId));
 
         Book book = bookRepository.findById(cartItemRequestDto.getBookId())
-                .orElseThrow(() -> new EntityNotFoundException("Book not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Book not found, id:"
+                        + cartItemRequestDto.getBookId()));
 
         CartItem cartItem = cartItemMapper.toModel(cartItemRequestDto);
         cartItem.setShoppingCart(shoppingCart);
@@ -64,7 +65,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCartResponseDto updateCartItem(Long cartItemId, int quantity) {
         logger.info("Updating cart item with id {}", cartItemId);
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new EntityNotFoundException("Cart item not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Cart item not found, id: "
+                        + cartItemId));
 
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
@@ -76,7 +78,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void removeBookFromCart(Long cartItemId) {
         logger.info("Removing cart item with id {}", cartItemId);
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new EntityNotFoundException("Cart item not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Cart item not found, id: "
+                        + cartItemId)));
 
         cartItemRepository.delete(cartItem);
     }
@@ -84,7 +87,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCart createShoppingCartForUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id "
+                        + userId));
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
         shoppingCartRepository.save(shoppingCart);
