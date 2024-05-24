@@ -1,6 +1,7 @@
 package com.onlinebookstore.onlinebookstore.model;
 
 import com.onlinebookstore.onlinebookstore.model.roles.Role;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,12 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,27 +30,56 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @SQLDelete(sql = "UPDATE users SET isdeleted = true WHERE id=?")
 @SQLRestriction("is_deleted = false")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private Long id;
+
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private String email;
+
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private String password;
+
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Column(name = "first_name")
     private String firstName;
+
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Column(name = "last_name")
     private String lastName;
+
     @Column(name = "shipping_address")
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private String shippingAddress;
+
+    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private boolean isDeleted = false;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Role> roles;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private ShoppingCart shoppingCart;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -86,35 +118,5 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof User user)) {
-            return false;
-        }
-        return isDeleted() == user.isDeleted()
-                && Objects.equals(getId(), user.getId())
-                && Objects.equals(getEmail(), user.getEmail())
-                && Objects.equals(getPassword(), user.getPassword())
-                && Objects.equals(getFirstName(), user.getFirstName())
-                && Objects.equals(getLastName(), user.getLastName())
-                && Objects.equals(getShippingAddress(), user.getShippingAddress())
-                && Objects.equals(getRoles(), user.getRoles());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(),
-                getEmail(),
-                getPassword(),
-                getFirstName(),
-                getLastName(),
-                getShippingAddress(),
-                isDeleted(),
-                getRoles());
     }
 }

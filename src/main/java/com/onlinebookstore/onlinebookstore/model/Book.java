@@ -13,11 +13,11 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -27,63 +27,53 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id=?")
 @SQLRestriction("is_deleted = false")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class Book {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private Long id;
+
     @NotBlank
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private String title;
+
     @NotBlank
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private String author;
+
     @NotBlank
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Column(unique = true)
     private String isbn;
+
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private BigDecimal price;
+
+    @ToString.Include
     private String description;
+
     private String coverImage;
+
     @Column(nullable = false)
+    @EqualsAndHashCode.Include
     private boolean isDeleted = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JoinTable(
             name = "books_categories",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Book book)) {
-            return false;
-        }
-        return isDeleted() == book.isDeleted()
-                && Objects.equals(getId(), book.getId())
-                && Objects.equals(getTitle(), book.getTitle())
-                && Objects.equals(getAuthor(), book.getAuthor())
-                && Objects.equals(getIsbn(), book.getIsbn())
-                && Objects.equals(getPrice(), book.getPrice())
-                && Objects.equals(getDescription(), book.getDescription())
-                && Objects.equals(getCoverImage(), book.getCoverImage())
-                && Objects.equals(getCategories(), book.getCategories());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(),
-                getTitle(),
-                getAuthor(),
-                getIsbn(),
-                getPrice(),
-                getDescription(),
-                getCoverImage(),
-                isDeleted(),
-                getCategories());
-    }
 }

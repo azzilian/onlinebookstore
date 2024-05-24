@@ -32,9 +32,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRegistrationResponseDto register(UserRegistrationRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new RegistationException("Cannot register user with this email - "
-                    + "user already exists");
+            throw new RegistationException("Cannot register user with this email "
+                    + "- user already exists");
         }
+
         User user = userMapper.toModel(requestDto);
         String encryptedPassword = passwordEncoder.encode(requestDto.getPassword());
         user.setPassword(encryptedPassword);
@@ -45,11 +46,12 @@ public class UserServiceImpl implements UserService {
         roles.add(userRole);
         user.setRoles(roles);
 
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        user.setShoppingCart(shoppingCart);
+
         User savedUser = userRepository.save(user);
 
-        ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setUser(savedUser);
-        shoppingCartRepository.save(shoppingCart);
         return userMapper.toDto(savedUser);
     }
 }

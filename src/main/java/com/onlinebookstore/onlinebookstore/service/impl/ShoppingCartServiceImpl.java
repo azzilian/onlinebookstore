@@ -62,11 +62,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartResponseDto updateCartItem(Long cartItemId, int quantity) {
+    public ShoppingCartResponseDto updateCartItem(Long cartItemId, int quantity, Long userId) {
         logger.info("Updating cart item with id {}", cartItemId);
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart item not found, id: "
                         + cartItemId));
+
+        if (!cartItem.getShoppingCart().getUser().getId().equals(userId)) {
+            throw new SecurityException("You do not have permission to modify this cart item");
+        }
 
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
@@ -75,11 +79,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void removeBookFromCart(Long cartItemId) {
+    public void removeBookFromCart(Long cartItemId, Long userId) {
         logger.info("Removing cart item with id {}", cartItemId);
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart item not found, id: "
                         + cartItemId));
+
+        if (!cartItem.getShoppingCart().getUser().getId().equals(userId)) {
+            throw new SecurityException("You do not have permission to modify this cart item");
+        }
 
         cartItemRepository.delete(cartItem);
     }
