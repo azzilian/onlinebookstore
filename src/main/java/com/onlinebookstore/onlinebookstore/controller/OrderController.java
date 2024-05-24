@@ -6,9 +6,11 @@ import com.onlinebookstore.onlinebookstore.dto.order.OrderResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.order.OrderUpdateStatusDto;
 import com.onlinebookstore.onlinebookstore.model.User;
 import com.onlinebookstore.onlinebookstore.service.interfaces.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,51 +24,58 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
+@Tag(name = "Order endpoints management", description = "Endpoints to manage shopping cart")
 public class OrderController {
     private final OrderService orderService;
 
-    @PostMapping
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<OrderResponseDto> placeOrder(
-            @RequestBody OrderRequestDto orderRequestDto,
-            @AuthenticationPrincipal User user) {
-        orderRequestDto.setUserId(user.getId());
-        OrderResponseDto orderResponse = orderService.placeOrder(orderRequestDto);
-        return ResponseEntity.ok(orderResponse);
-    }
-
     @GetMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Set<OrderResponseDto>> getOrderHistory(
+    @Operation(summary = "Get all orders", description = " User can view all order "
+            + "their details and status")
+    public Set<OrderResponseDto> getOrderHistory(
             @AuthenticationPrincipal User user) {
-        Set<OrderResponseDto> orderHistory = orderService.getOrderHistory(user);
-        return ResponseEntity.ok(orderHistory);
-    }
-
-    @PatchMapping("/{orderId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderResponseDto> updateOrderStatus(
-            @PathVariable Long orderId,
-            @RequestBody OrderUpdateStatusDto orderUpdateStatusDto) {
-        OrderResponseDto updatedOrder = orderService.updateOrderStatus(orderId,
-                orderUpdateStatusDto);
-        return ResponseEntity.ok(updatedOrder);
+        return orderService.getOrderHistory(user);
     }
 
     @GetMapping("/{orderId}/items")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Set<OrderItemResponseDto>> getOrderItems(
+    @Operation(summary = "Get a all items in order", description = " User can view "
+            + "all items in order")
+    public Set<OrderItemResponseDto> getOrderItems(
             @PathVariable Long orderId) {
-        Set<OrderItemResponseDto> orderItems = orderService.getOrderItems(orderId);
-        return ResponseEntity.ok(orderItems);
+        return orderService.getOrderItems(orderId);
     }
 
     @GetMapping("/{orderId}/items/{itemId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<OrderItemResponseDto> getOrderItem(
+    @Operation(summary = "Get a specific item in order", description = " User can view a specific "
+            + "item in  order and its details")
+    public OrderItemResponseDto getOrderItem(
             @PathVariable Long orderId,
             @PathVariable Long itemId) {
-        OrderItemResponseDto orderItem = orderService.getOrderItem(orderId, itemId);
-        return ResponseEntity.ok(orderItem);
+        return orderService.getOrderItem(orderId, itemId);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Create order", description = "Creating new order"
+            + " based on cartItems in users cart, after order created - "
+            + "all cartitems are removed from cart, status became PENDING")
+    public OrderResponseDto placeOrder(
+            @Valid @RequestBody OrderRequestDto orderRequestDto,
+            @AuthenticationPrincipal User user) {
+        orderRequestDto.setUserId(user.getId());
+        return orderService.placeOrder(orderRequestDto);
+    }
+
+    @PatchMapping("/{orderId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Order status update", description = " PATCH update order status"
+            + "by admin, status can be PENDING, COMPLETED, DELIVERING")
+    public OrderResponseDto updateOrderStatus(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderUpdateStatusDto orderUpdateStatusDto) {
+        return orderService.updateOrderStatus(orderId,
+                orderUpdateStatusDto);
     }
 }
