@@ -79,7 +79,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         logger.info("Removing cart item with id {}", cartItemId);
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart item not found, id: "
-                        + cartItemId)));
+                        + cartItemId));
 
         cartItemRepository.delete(cartItem);
     }

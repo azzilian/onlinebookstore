@@ -34,8 +34,10 @@ databaseChangeLog:
                   baseTableName: cartitems
                   referencedColumnNames: id
                   referencedTableName: shoppingcarts
+                  constraintName: fk_cartitems_shoppingcarts
               - foreignKeyConstraint:
                   baseColumnNames: book_id
                   baseTableName: cartitems
                   referencedColumnNames: id
                   referencedTableName: books
+                  constraintName: fk_cartitems_books
