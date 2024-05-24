@@ -33,38 +33,26 @@ public class Book {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private Long id;
 
     @NotBlank
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private String title;
 
     @NotBlank
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private String author;
 
     @NotBlank
-    @EqualsAndHashCode.Include
-    @ToString.Include
     @Column(unique = true)
     private String isbn;
 
     @Column(nullable = false)
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private BigDecimal price;
 
-    @ToString.Include
     private String description;
 
     private String coverImage;
 
     @Column(nullable = false)
-    @EqualsAndHashCode.Include
     private boolean isDeleted = false;
 
     @ManyToMany(fetch = FetchType.LAZY)

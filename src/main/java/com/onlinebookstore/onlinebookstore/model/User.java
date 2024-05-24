@@ -35,34 +35,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private Long id;
 
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private String email;
 
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private String password;
 
-    @EqualsAndHashCode.Include
-    @ToString.Include
     @Column(name = "first_name")
     private String firstName;
 
-    @EqualsAndHashCode.Include
-    @ToString.Include
     @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "shipping_address")
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private String shippingAddress;
 
-    @EqualsAndHashCode.Include
     @Column(nullable = false)
     private boolean isDeleted = false;
 

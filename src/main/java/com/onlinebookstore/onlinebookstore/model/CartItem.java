@@ -22,8 +22,6 @@ import lombok.ToString;
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private Long id;
 
     @ManyToOne
@@ -43,7 +41,5 @@ public class CartItem {
     private Book book;
 
     @Column(nullable = false)
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private int quantity;
 }

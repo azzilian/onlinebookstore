@@ -25,8 +25,6 @@ import lombok.ToString;
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)

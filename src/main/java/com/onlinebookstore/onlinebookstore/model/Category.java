@@ -25,19 +25,14 @@ import org.hibernate.annotations.SQLRestriction;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @ToString.Include
     private Long id;
 
     @NotBlank
-    @EqualsAndHashCode.Include
-    @ToString.Include
     @Column(unique = true)
     private String name;
 
     private String description;
 
     @Column(name = "is_deleted", nullable = false)
-    @EqualsAndHashCode.Include
     private boolean isDeleted = false;
 }
