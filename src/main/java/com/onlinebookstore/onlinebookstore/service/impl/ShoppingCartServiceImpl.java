@@ -47,7 +47,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseGet(() -> createShoppingCartForUser(userId));
 
         Book book = bookRepository.findById(cartItemRequestDto.getBookId())
-                .orElseThrow(() -> new RuntimeException("Book not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Book not found"));
 
         CartItem cartItem = cartItemMapper.toModel(cartItemRequestDto);
         cartItem.setShoppingCart(shoppingCart);
@@ -64,7 +64,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCartResponseDto updateCartItem(Long cartItemId, int quantity) {
         logger.info("Updating cart item with id {}", cartItemId);
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Cart item not found"));
 
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
@@ -76,7 +76,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void removeBookFromCart(Long cartItemId) {
         logger.info("Removing cart item with id {}", cartItemId);
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Cart item not found"));
 
         cartItemRepository.delete(cartItem);
     }

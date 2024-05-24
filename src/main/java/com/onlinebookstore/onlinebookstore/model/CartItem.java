@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,4 +35,23 @@ public class CartItem {
 
     @Column(nullable = false)
     private int quantity;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CartItem cartItem)) {
+            return false;
+        }
+        return getQuantity() == cartItem.getQuantity()
+                && Objects.equals(getId(), cartItem.getId())
+                && Objects.equals(getShoppingCart(), cartItem.getShoppingCart())
+                && Objects.equals(getBook(), cartItem.getBook());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getShoppingCart(), getBook(), getQuantity());
+    }
 }

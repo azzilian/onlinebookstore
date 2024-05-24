@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -53,4 +54,36 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Book book)) {
+            return false;
+        }
+        return isDeleted() == book.isDeleted()
+                && Objects.equals(getId(), book.getId())
+                && Objects.equals(getTitle(), book.getTitle())
+                && Objects.equals(getAuthor(), book.getAuthor())
+                && Objects.equals(getIsbn(), book.getIsbn())
+                && Objects.equals(getPrice(), book.getPrice())
+                && Objects.equals(getDescription(), book.getDescription())
+                && Objects.equals(getCoverImage(), book.getCoverImage())
+                && Objects.equals(getCategories(), book.getCategories());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(),
+                getTitle(),
+                getAuthor(),
+                getIsbn(),
+                getPrice(),
+                getDescription(),
+                getCoverImage(),
+                isDeleted(),
+                getCategories());
+    }
 }
