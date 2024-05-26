@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderRepository.save(order);
 
         cart.getCartItems().forEach(cartItem -> shoppingCartService
-                .removeBookFromCart(cartItem.getId()));
+                .removeBookFromCart(cartItem.getId(), user.getId()));
         shoppingCartRepository.save(cart);
 
         return orderMapper.toDto(savedOrder);
@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
             ShoppingCart cart = shoppingCartRepository.findByUserId(order.getUser().getId())
                     .orElseThrow(() -> new EntityNotFoundException(
                             "Shopping cart not found for user id: "
-                            + order.getUser().getId()));
+                                    + order.getUser().getId()));
             cart.getCartItems().clear();
             shoppingCartRepository.save(cart);
         }
