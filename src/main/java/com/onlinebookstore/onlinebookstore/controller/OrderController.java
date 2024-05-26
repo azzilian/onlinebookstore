@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,7 +34,8 @@ public class OrderController {
     @Operation(summary = "Get all orders", description = " User can view all order "
             + "their details and status")
     public Set<OrderResponseDto> getOrderHistory(
-            @AuthenticationPrincipal User user) {
+            Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
         return orderService.getOrderHistory(user);
     }
 
@@ -42,8 +44,10 @@ public class OrderController {
     @Operation(summary = "Get a all items in order", description = " User can view "
             + "all items in order")
     public Set<OrderItemResponseDto> getOrderItems(
-            @PathVariable Long orderId) {
-        return orderService.getOrderItems(orderId);
+            @PathVariable Long orderId,
+            Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return orderService.getOrderItems(orderId, user.getId());
     }
 
     @GetMapping("/{orderId}/items/{itemId}")
@@ -52,8 +56,10 @@ public class OrderController {
             + "item in  order and its details")
     public OrderItemResponseDto getOrderItem(
             @PathVariable Long orderId,
-            @PathVariable Long itemId) {
-        return orderService.getOrderItem(orderId, itemId);
+            @PathVariable Long itemId,
+            Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return orderService.getOrderItem(orderId, itemId, user.getId());
     }
 
     @PostMapping

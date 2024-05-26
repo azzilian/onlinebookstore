@@ -113,21 +113,31 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Set<OrderItemResponseDto> getOrderItems(Long orderId) {
+    public Set<OrderItemResponseDto> getOrderItems(Long orderId,
+                                                   Long userId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Order not found with id: " + orderId));
+
         Set<OrderItem> orderItems = order.getOrderItems();
+
+        if (!order.getUser().getId().equals(userId)) {
+            throw new SecurityException("You do not have permission to see this order items");
+        }
+
         return orderItems.stream()
                 .map(orderItemMapper::toDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public OrderItemResponseDto getOrderItem(Long orderId, Long orderItemId) {
+    public OrderItemResponseDto getOrderItem(Long orderId, Long orderItemId, Long userId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Order not found with id: " + orderId));
+        if (!order.getUser().getId().equals(userId)) {
+            throw new SecurityException("You do not have permission to see this order items");
+        }
         OrderItem orderItem = order.getOrderItems().stream()
                 .filter(item -> item.getId().equals(orderItemId))
                 .findFirst()
