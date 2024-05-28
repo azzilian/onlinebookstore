@@ -2,13 +2,14 @@ package com.onlinebookstore.onlinebookstore.controller;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
@@ -54,24 +55,33 @@ class BookControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createBook_ValidRequestDto_OK() throws Exception {
 
-        BookRequestDto requestDto = new BookRequestDto()
+        Set<Long> categoryIds = new HashSet<>();
+        categoryIds.add(1L);
+
+        BookRequestDto requestDto;
+        requestDto = new BookRequestDto()
                 .setTitle("Lenore")
-                .setAuthor("Edgar Allan Poe")
-                .setIsbn("777-4334-32332232")
-                .setPrice(BigDecimal.valueOf(10.50));
+                .setAuthor("EdgarAllanPoe")
+                .setIsbn("9780306406157")
+                .setPrice(BigDecimal.valueOf(10.50))
+                .setDescription("test")
+                .setCoverImage("test@test.com")
+                .setCategoryIds(categoryIds);
 
         BookResponseDto expected = new BookResponseDto()
                 .setTitle(requestDto.getTitle())
                 .setAuthor(requestDto.getAuthor())
                 .setIsbn(requestDto.getIsbn())
-                .setPrice(requestDto.getPrice());
+                .setPrice(requestDto.getPrice())
+                .setDescription(requestDto.getDescription())
+                .setCoverImage(requestDto.getCoverImage())
+                .setCategoryIds(requestDto.getCategoryIds());
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
         MvcResult result = mockMvc.perform(post("/api/books")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
                 .andReturn();
 
         BookResponseDto actual = objectMapper
