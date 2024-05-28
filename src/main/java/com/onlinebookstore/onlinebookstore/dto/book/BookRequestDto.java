@@ -6,9 +6,11 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.Set;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.ISBN;
 
 @Data
+@Accessors(chain = true)
 public class BookRequestDto {
     @NotNull(message = "title field cannot be empty")
     @Size(min = 1, message = "title name should be at least 1 character")

@@ -3,8 +3,10 @@ package com.onlinebookstore.onlinebookstore.dto.category;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class CategoryRequestDto {
     @NotNull(message = "name field cannot be empty")
     @Size(min = 1,
