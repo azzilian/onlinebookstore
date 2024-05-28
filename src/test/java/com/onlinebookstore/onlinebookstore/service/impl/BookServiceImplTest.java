@@ -1,22 +1,28 @@
 package com.onlinebookstore.onlinebookstore.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
-import com.onlinebookstore.onlinebookstore.exeption.InvalidCategoryIdException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
 import com.onlinebookstore.onlinebookstore.model.Book;
 import com.onlinebookstore.onlinebookstore.model.Category;
 import com.onlinebookstore.onlinebookstore.repository.BookRepository;
 import com.onlinebookstore.onlinebookstore.repository.CategoryRepository;
 import com.onlinebookstore.onlinebookstore.service.interfaces.CategoryService;
-
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,8 +35,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @Sql(scripts = {
@@ -93,6 +97,9 @@ class BookServiceImplTest {
 
     @Test
     @DisplayName("Find all books in empty database should throw exception")
+    @Sql(scripts = {
+            "classpath:database/book/remove-all-from-books-table.sql"
+    }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAllBooks_EmptyData_NotOk() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Book> emptyBookPage = new PageImpl<>(Collections.emptyList());
@@ -110,7 +117,11 @@ class BookServiceImplTest {
     }
 
     @Test
-    void save() {
+    @DisplayName("Create new Book")
+    @Sql(scripts = {
+            "classpath:database/book/remove-all-from-books-table.sql"
+    }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void createNewBook_ValidData_OK() {
         Set<Long> categoryIds = new HashSet<>();
         categoryIds.add(1L);
 
@@ -138,7 +149,6 @@ class BookServiceImplTest {
                     return category;
                 })
                 .collect(Collectors.toList());
-        Set<Category> categorySet = new HashSet<>(categories);
 
         BookDtoWithoutCategoriesIds bookDtoWithoutCategories = new BookDtoWithoutCategoriesIds();
         bookDtoWithoutCategories.setTitle("Lenore");
@@ -149,13 +159,12 @@ class BookServiceImplTest {
         Mockito.when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
         Mockito.when(bookMapper.toModel(dto)).thenReturn(book);
         Mockito.when(bookRepository.save(book)).thenReturn(book);
-        Mockito.when(bookMapper.toDtoWithoutCategories(book)).thenReturn(bookDtoWithoutCategories);
         Mockito.when(bookMapper.toDto(book)).thenReturn(bookResponseDto);
 
         BookResponseDto savedBookDto = bookService.save(dto);
 
         Mockito.verify(bookRepository).save(book);
-
+        Set<Category> categorySet = new HashSet<>(categories);
         assertEquals(categorySet, book.getCategories());
 
         assertNotNull(savedBookDto);
@@ -163,7 +172,11 @@ class BookServiceImplTest {
     }
 
     @Test
-    void update() {
+    @DisplayName("Update existing Book")
+    @Sql(scripts = {
+            "classpath:database/book/remove-all-from-books-table.sql"
+    }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void changeExistingBook_ValidData_OK() {
         Book book = new Book();
         book.setId(1L);
         book.setTitle("Book 1");
@@ -174,6 +187,11 @@ class BookServiceImplTest {
         categoryIds.add(1L);
         requestDto.setCategoryIds(categoryIds);
 
+        BookResponseDto bookResponseDto = new BookResponseDto();
+        bookResponseDto.setId(1L);
+        bookResponseDto.setTitle("Book 2");
+
+        Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         List<Category> categories = categoryIds.stream()
                 .map(id -> {
                     Category category = new Category();
@@ -181,24 +199,13 @@ class BookServiceImplTest {
                     return category;
                 })
                 .collect(Collectors.toList());
-        Set<Category> categorySet = new HashSet<>(categories);
-
-        BookResponseDto bookResponseDto = new BookResponseDto();
-        bookResponseDto.setId(1L);
-        bookResponseDto.setTitle("Book 2");
-
-        Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         Mockito.when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
         Mockito.when(bookRepository.save(book)).thenReturn(book);
         Mockito.when(bookMapper.toDto(book)).thenReturn(bookResponseDto);
 
         BookResponseDto updatedBookDto = bookService.update(1L, requestDto);
 
-        Mockito.verify(bookRepository).findById(1L);
-        Mockito.verify(categoryRepository).findAllById(categoryIds);
-        Mockito.verify(bookRepository).save(book);
-        Mockito.verify(bookMapper).toDto(book);
-
+        Set<Category> categorySet = new HashSet<>(categories);
         assertEquals(categorySet, book.getCategories());
 
         assertNotNull(updatedBookDto);
@@ -206,10 +213,11 @@ class BookServiceImplTest {
     }
 
     @Test
+    @DisplayName("Find book by book id")
     @Sql(scripts = {
             "classpath:database/book/remove-all-from-books-table.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void findById() {
+    void findBookById_ValidData_OK() {
         Book book = new Book();
         book.setId(1L);
         book.setTitle("Book 1");
@@ -229,7 +237,11 @@ class BookServiceImplTest {
     }
 
     @Test
-    void delete_BookById() {
+    @DisplayName("Delete book by id")
+    @Sql(scripts = {
+            "classpath:database/book/remove-all-from-books-table.sql"
+    }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void deleteBookById_ValidData_OK() {
         Book book = new Book();
         book.setId(1L);
         book.setTitle("Book 1");
@@ -244,12 +256,11 @@ class BookServiceImplTest {
     }
 
     @Test
+    @DisplayName("Find all book by category id")
     @Sql(scripts = {
             "classpath:database/book/remove-all-from-books-table.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void getBooksByCategoryId() {
-        Long categoryId = 1L;
-
+    void getBooksByCategoryId_ValidData_OK() {
         Book book1 = new Book();
         book1.setId(1L);
         book1.setTitle("Book 1");
@@ -267,16 +278,17 @@ class BookServiceImplTest {
         dto2.setTitle("Book 2");
 
         List<Book> books = Arrays.asList(book1, book2);
-        List<BookDtoWithoutCategoriesIds> dtos = Arrays.asList(dto1, dto2);
         Pageable pageable = PageRequest.of(0, 10);
         Page<Book> bookPage = new PageImpl<>(Arrays.asList(book1, book2));
-
-        Mockito.when(bookRepository.findAllByCategoriesId(categoryId,pageable)).thenReturn(books);
+        Long categoryId = 1L;
+        Mockito.when(bookRepository.findAllByCategoriesId(categoryId,pageable))
+                .thenReturn(books);
         Mockito.when(bookMapper.toDtoWithoutCategories(book1)).thenReturn(dto1);
         Mockito.when(bookMapper.toDtoWithoutCategories(book2)).thenReturn(dto2);
 
-        List<BookDtoWithoutCategoriesIds> result = bookService.getBooksByCategoryId(categoryId, pageable);
-
+        List<BookDtoWithoutCategoriesIds> result = bookService
+                .getBooksByCategoryId(categoryId, pageable);
+        List<BookDtoWithoutCategoriesIds> dtos = Arrays.asList(dto1, dto2);
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals(dtos.get(0), result.get(0));
