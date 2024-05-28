@@ -58,8 +58,7 @@ class BookControllerTest {
         Set<Long> categoryIds = new HashSet<>();
         categoryIds.add(1L);
 
-        BookRequestDto requestDto;
-        requestDto = new BookRequestDto()
+        BookRequestDto requestDto = new BookRequestDto()
                 .setTitle("Lenore")
                 .setAuthor("EdgarAllanPoe")
                 .setIsbn("9780306406157")
