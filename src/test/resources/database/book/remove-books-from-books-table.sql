@@ -1,3 +1,1 @@
-DELETE FROM books_categories;
-DELETE FROM books;
-DELETE FROM categories;
+DELETE FROM books WHERE Id BETWEEN 1 AND 2;
