@@ -70,8 +70,7 @@ public class OrderController {
     public OrderResponseDto placeOrder(
             @Valid @RequestBody OrderRequestDto orderRequestDto,
             @AuthenticationPrincipal User user) {
-        orderRequestDto.setUserId(user.getId());
-        return orderService.placeOrder(orderRequestDto);
+        return orderService.placeOrder(orderRequestDto, user);
     }
 
     @PatchMapping("/{orderId}")

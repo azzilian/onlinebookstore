@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface OrderService {
-    OrderResponseDto placeOrder(OrderRequestDto orderRequestDto);
+    OrderResponseDto placeOrder(OrderRequestDto orderRequestDto, User user);
 
     Set<OrderResponseDto> getOrderHistory(User user);
 

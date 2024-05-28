@@ -102,4 +102,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartRepository.save(shoppingCart);
         return shoppingCart;
     }
+
+    @Override
+    public void clearCartByUserId(Long userId) {
+        shoppingCartRepository.deleteAllCartItemsByUserId(userId);
+    }
 }
