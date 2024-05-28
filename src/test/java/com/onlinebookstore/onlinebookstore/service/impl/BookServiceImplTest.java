@@ -140,10 +140,17 @@ class BookServiceImplTest {
                 .collect(Collectors.toList());
         Set<Category> categorySet = new HashSet<>(categories);
 
+        BookDtoWithoutCategoriesIds bookDtoWithoutCategories = new BookDtoWithoutCategoriesIds();
+        bookDtoWithoutCategories.setTitle("Lenore");
+
+        BookResponseDto bookResponseDto = new BookResponseDto();
+        bookResponseDto.setTitle("Lenore");
+
         Mockito.when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
         Mockito.when(bookMapper.toModel(dto)).thenReturn(book);
         Mockito.when(bookRepository.save(book)).thenReturn(book);
-        Mockito.when(bookMapper.toDtoWithoutCategories(book)).thenReturn(new BookDtoWithoutCategoriesIds());
+        Mockito.when(bookMapper.toDtoWithoutCategories(book)).thenReturn(bookDtoWithoutCategories);
+        Mockito.when(bookMapper.toDto(book)).thenReturn(bookResponseDto);
 
         BookResponseDto savedBookDto = bookService.save(dto);
 
@@ -167,9 +174,6 @@ class BookServiceImplTest {
         categoryIds.add(1L);
         requestDto.setCategoryIds(categoryIds);
 
-        Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
-
-
         List<Category> categories = categoryIds.stream()
                 .map(id -> {
                     Category category = new Category();
@@ -177,15 +181,27 @@ class BookServiceImplTest {
                     return category;
                 })
                 .collect(Collectors.toList());
-        Mockito.when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
+        Set<Category> categorySet = new HashSet<>(categories);
 
+        BookResponseDto bookResponseDto = new BookResponseDto();
+        bookResponseDto.setId(1L);
+        bookResponseDto.setTitle("Book 2");
+
+        Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+        Mockito.when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
+        Mockito.when(bookRepository.save(book)).thenReturn(book);
+        Mockito.when(bookMapper.toDto(book)).thenReturn(bookResponseDto);
 
         BookResponseDto updatedBookDto = bookService.update(1L, requestDto);
 
         Mockito.verify(bookRepository).findById(1L);
         Mockito.verify(categoryRepository).findAllById(categoryIds);
+        Mockito.verify(bookRepository).save(book);
+        Mockito.verify(bookMapper).toDto(book);
 
+        assertEquals(categorySet, book.getCategories());
 
+        assertNotNull(updatedBookDto);
         assertEquals(requestDto.getTitle(), updatedBookDto.getTitle());
     }
 

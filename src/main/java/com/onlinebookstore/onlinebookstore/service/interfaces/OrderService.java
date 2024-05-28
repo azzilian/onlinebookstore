@@ -1,14 +1,11 @@
 package com.onlinebookstore.onlinebookstore.service.interfaces;
 
-<<<<<<< HEAD
 import com.onlinebookstore.onlinebookstore.dto.order.OrderItemResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.order.OrderRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.order.OrderResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.order.OrderUpdateStatusDto;
 import com.onlinebookstore.onlinebookstore.model.User;
 import java.util.Set;
-=======
->>>>>>> 91d5085 (dto added)
 import org.springframework.stereotype.Service;
 
 @Service
