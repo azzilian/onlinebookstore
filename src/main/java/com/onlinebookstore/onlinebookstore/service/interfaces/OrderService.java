@@ -6,8 +6,6 @@ import com.onlinebookstore.onlinebookstore.dto.order.OrderResponseDto;
 import com.onlinebookstore.onlinebookstore.dto.order.OrderUpdateStatusDto;
 import com.onlinebookstore.onlinebookstore.model.User;
 import java.util.Set;
-
-import com.onlinebookstore.onlinebookstore.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
