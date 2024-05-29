@@ -3,3 +3,4 @@ VALUES (1, 'Dragon Lance', 'Laura & Tracy Hickman', '978-0-306-40615-7', 10.99, 
 
 INSERT INTO books (id, title, author, isbn, price, description, cover_image)
 VALUES (2, 'Dragon Lance 2', 'Laura & Tracy Hickman', '978-0-306-40611-7', 11.99, 'Adventures of Red Wizard', 'https://example.com/updated-cover-image.jpg');
+
