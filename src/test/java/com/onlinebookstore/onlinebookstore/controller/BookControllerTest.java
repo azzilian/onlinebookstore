@@ -1,7 +1,10 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
@@ -11,11 +14,11 @@ import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Set;
 import javax.sql.DataSource;
+
+import com.onlinebookstore.onlinebookstore.repository.BookRepository;
+import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -37,6 +40,10 @@ class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private BookRequestDto requestDto;
+
+    private BookService bookService;
+
     @BeforeAll
     static void beforeAll(
             @Autowired WebApplicationContext applicationContext,
@@ -48,17 +55,12 @@ class BookControllerTest {
         teardown(dataSource);
     }
 
-    @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @DisplayName("Create new book")
-    @Sql(scripts = "classpath:database/book/remove-lenore-from-books-table.sql",
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void createBook_ValidRequestDto_OK() throws Exception {
-
+    @BeforeEach
+    void setUp() {
         Set<Long> categoryIds = new HashSet<>();
         categoryIds.add(1L);
 
-        BookRequestDto requestDto = new BookRequestDto()
+        requestDto = new BookRequestDto()
                 .setTitle("Lenore")
                 .setAuthor("EdgarAllanPoe")
                 .setIsbn("9780306406157")
@@ -66,6 +68,15 @@ class BookControllerTest {
                 .setDescription("test")
                 .setCoverImage("test@test.com")
                 .setCategoryIds(categoryIds);
+    }
+
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @DisplayName("Create new book")
+    @Sql(scripts = "classpath:database/book/remove-lenore-from-books-table.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void createBook_ValidRequestDto_OK() throws Exception {
 
         BookResponseDto expected = new BookResponseDto()
                 .setTitle(requestDto.getTitle())
@@ -92,19 +103,46 @@ class BookControllerTest {
     }
 
     @Test
-    void getAll() {
+    @DisplayName("Get All Books")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void getAllBooks() throws Exception {
+        mockMvc.perform(get("/api/books"))
+                .andExpect(status().isAccepted());
     }
 
     @Test
-    void findById() {
+    @DisplayName("Find Book by Id")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void findBookById() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(get("/api/books/{id}", id))
+                .andExpect(status().isAccepted());
     }
 
     @Test
-    void updateBook() {
+    @DisplayName("Update Book")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void updateBook() throws Exception {
+        Long id = 1L;
+        BookRequestDto requestDto = new BookRequestDto();
+        String jsonRequest = objectMapper.writeValueAsString(requestDto);
+        mockMvc.perform(put("/api/books/{id}", id)
+                        .content(jsonRequest)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
     }
 
     @Test
-    void deleteBook() {
+    @DisplayName("Delete Book")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void deleteBook() throws Exception {
+        Long id = 1L;
+        mockMvc.perform(delete("/api/books/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(bookService).delete(id);
+        verifyNoMoreInteractions(bookService);
     }
 
     @AfterAll

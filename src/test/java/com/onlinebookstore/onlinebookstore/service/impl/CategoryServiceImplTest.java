@@ -57,7 +57,9 @@ class CategoryServiceImplTest {
         savedCategory.setName("Fiction");
         savedCategory.setDescription("Fictional books");
 
-        CategoryResponseDto responseDto = new CategoryResponseDto(1L, "Fiction", "Fictional books");
+        CategoryResponseDto responseDto = new CategoryResponseDto(1L,
+                "Fiction",
+                "Fictional books");
 
         when(categoryMapper.toModel(requestDto)).thenReturn(category);
         when(categoryRepository.save(category)).thenReturn(savedCategory);
@@ -89,7 +91,9 @@ class CategoryServiceImplTest {
         updatedCategory.setName("Science Fiction");
         updatedCategory.setDescription("Science Fictional books");
 
-        CategoryResponseDto responseDto = new CategoryResponseDto(categoryId, "Science Fiction", "Science Fictional books");
+        CategoryResponseDto responseDto = new CategoryResponseDto(categoryId,
+                "Science Fiction",
+                "Science Fictional books");
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(categoryRepository.save(category)).thenReturn(updatedCategory);
@@ -113,7 +117,9 @@ class CategoryServiceImplTest {
         category.setName("Fiction");
         category.setDescription("Fictional books");
 
-        CategoryResponseDto responseDto = new CategoryResponseDto(categoryId, "Fiction", "Fictional books");
+        CategoryResponseDto responseDto = new CategoryResponseDto(categoryId,
+                "Fiction",
+                "Fictional books");
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         doNothing().when(categoryRepository).delete(category);
@@ -137,7 +143,9 @@ class CategoryServiceImplTest {
         category.setName("Fiction");
         category.setDescription("Fictional books");
 
-        CategoryResponseDto responseDto = new CategoryResponseDto(categoryId, "Fiction", "Fictional books");
+        CategoryResponseDto responseDto = new CategoryResponseDto(categoryId,
+                "Fiction",
+                "Fictional books");
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(categoryMapper.toDto(category)).thenReturn(responseDto);
@@ -158,7 +166,9 @@ class CategoryServiceImplTest {
         category.setName("Fiction");
         category.setDescription("Fictional books");
 
-        CategoryResponseDto responseDto = new CategoryResponseDto(1L, "Fiction", "Fictional books");
+        CategoryResponseDto responseDto = new CategoryResponseDto(1L,
+                "Fiction",
+                "Fictional books");
 
         List<Category> categories = Collections.singletonList(category);
         Page<Category> page = new PageImpl<>(categories);
