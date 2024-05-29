@@ -45,6 +45,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CategoryControllerTest {
 
+    @Autowired
     protected static MockMvc mockMvc;
 
     @MockBean
@@ -77,7 +78,7 @@ class CategoryControllerTest {
     @Test
     @DisplayName("Get all categories")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void getAllCategories_Success() throws Exception {
+    void getAllCategories_OK() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
         List<CategoryResponseDto> categories = Collections.singletonList(categoryResponseDto);
 
@@ -96,7 +97,7 @@ class CategoryControllerTest {
     @Test
     @DisplayName("Get category by ID")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void getCategoryById_Success() throws Exception {
+    void getCategoryById_OK() throws Exception {
         Mockito.when(categoryService.getById(anyLong())).thenReturn(categoryResponseDto);
 
         mockMvc.perform(get("/api/categories/{id}", 1L)
@@ -113,7 +114,7 @@ class CategoryControllerTest {
     @Test
     @DisplayName("Create new category")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void createCategory_Success() throws Exception {
+    void createCategory_OK() throws Exception {
         CategoryRequestDto categoryRequestDto = new CategoryRequestDto();
         categoryRequestDto.setName("Fiction")
                 .setDescription("Fictional books");
@@ -133,7 +134,7 @@ class CategoryControllerTest {
     @Test
     @DisplayName("Update category")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void updateCategory_Success() throws Exception {
+    void updateCategory_OK() throws Exception {
         CategoryRequestDto categoryRequestDto = new CategoryRequestDto();
         categoryRequestDto.setName("Updated Fiction")
                 .setDescription("Updated fictional books");
@@ -156,7 +157,7 @@ class CategoryControllerTest {
     @Test
     @DisplayName("Delete category")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void deleteCategory_Success() throws Exception {
+    void deleteCategory_OK() throws Exception {
         mockMvc.perform(delete("/api/categories/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
