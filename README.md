@@ -1,4 +1,11 @@
+<div align="center">
+<img alt="Redoc logo" src="doc/images/vecteezy_cat-with-book-studying-logo-mascot-character-design_23286095.png"
+width="200px" />
+
 # Online Bookstore
+
+</div>
+
 ## Introduction
 
 Greetings! Allow me to introduce you to the Online Bookstore app.
