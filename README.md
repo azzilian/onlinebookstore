@@ -266,8 +266,113 @@ Run the Docker compose:
 </details>
 
 ## Shopping cart Endpoints
+<details>
+  <summary>Retrieve user's shopping cart</summary>
+
+- URL: `/api/cart`
+- Method: `GET`
+- Response Status: `200 OK`
+
+</details>
+
+<details>
+  <summary>Add book to the shopping cart</summary>
+
+- URL: `/api/cart`
+- Method: `POST`
+- Request Body: JSON with book details(bookId, quantity)
+- Example Request:
+  ```json
+  {
+    "bookId": 1,
+    "quantity": 12
+  }
+  ``` 
+- Response Status: `200 OK`
+</details>
+
+<details>
+  <summary>Update quantity of a book in the shopping cart</summary>
+
+- URL: `/api/cart/cart-items/{cartItemId}`
+- Method: `PUT`
+- Request Body: JSON with updated book details(quantity)
+- Example Request:
+  ```json
+  {
+    "quantity": 12
+  }
+  ``` 
+- Response Status: `200 OK`
+</details>
+
+<details>
+  <summary>Remove a book from the shopping cart</summary>
+
+- URL: `/api/cart/cart-items/{cartItemId}`
+- Method: `DELETE`
+- Response Status: `204 No Content`
+</details>
+
 
 ## Order Endpoints
+
+<details>
+  <summary>Place an order</summary>
+
+- URL: `/api/orders`
+- Method: `POST`
+- Request Body: JSON with order details(shippingAddress)
+- Example Request:
+  ```json
+  {
+     "shippingAddress": "City, Street ave, 1"
+  }
+  ``` 
+- Response Status: `200 OK`
+</details>
+
+<details>
+  <summary>Update order status</summary>
+
+- URL: `/api/orders/{id}`
+- Method: `PATCH`
+- Request Body: JSON with update order details(orderStatus - PENDING, COMPLETED, DELIVERING)
+- Example Request:
+  ```json
+  {
+     "orderStatus" : "COMPLETED"
+  }
+  ``` 
+- Response Status: `200 OK`
+</details>
+
+<details>
+  <summary>Retrieve user's order history</summary>
+
+- URL: `/api/orders`
+- Method: `GET`
+- Response Status: `200 OK`
+
+</details>
+
+<details>
+  <summary>Retrieve all OrderItems for a specific order</summary>
+
+- URL: `/api/orders/{orderId}/items`
+- Method: `GET`
+- Response Status: `200 OK`
+
+</details>
+
+<details>
+  <summary>Retrieve a specific OrderItem within an order</summary>
+
+- URL: `/api/orders/{orderId}/items/{itemId}`
+- Method: `GET`
+- Response Status: `200 OK`
+
+</details>
 
 # Technologies used:
 
