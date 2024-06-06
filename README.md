@@ -107,11 +107,7 @@ To run the tests, use the following Maven command:
 
 ## Installation using Docker
 
-Update docker-compose.yml, use variables from .env using "key" : "value":
-    
-    Example, variables for jwt token:
-      JWT_EXPIRATION: "${EXPIRATION}"
-      JWT_SECRET: "${SECRETKEY}"
+Please make sure you have set up all variables in your .env file and passing them to the docker-compose.yml correctly.
 
 Build the Docker image:
 
