@@ -109,6 +109,7 @@ To run the tests, use the following Maven command:
 
 Please make sure you have set up all variables in your .env file and passing them to the docker-compose.yml correctly.
 
+
 Build the Docker image:
 
     docker build -t books-service .
