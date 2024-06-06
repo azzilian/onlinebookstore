@@ -3,25 +3,19 @@ package com.onlinebookstore.onlinebookstore.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.onlinebookstore.onlinebookstore.model.Book;
-import java.sql.Connection;
+import com.onlinebookstore.onlinebookstore.utils.TearDownDatabase;
 import java.sql.SQLException;
 import java.util.List;
 import javax.sql.DataSource;
-
-import com.onlinebookstore.onlinebookstore.utils.TearDownDatabase;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
