@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import javax.sql.DataSource;
+
+import com.onlinebookstore.onlinebookstore.utils.TearDownDatabase;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,14 +27,14 @@ import org.springframework.test.context.jdbc.Sql;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BookRepositoryTest {
-
+    private static TearDownDatabase tearDownDatabase;
     @Autowired
     private BookRepository bookRepository;
 
     @BeforeAll
     static void beforeAll(
             @Autowired DataSource dataSource) throws SQLException {
-        teardown(dataSource);
+        tearDownDatabase.teardown(dataSource);
     }
 
     @Test
@@ -54,22 +56,4 @@ class BookRepositoryTest {
 
         assertEquals(2, books.size());
     }
-
-    @AfterAll
-    static void afterAll(
-            @Autowired DataSource dataSource) {
-        teardown(dataSource);
-    }
-
-    @SneakyThrows
-    private static void teardown(DataSource dataSource) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(true);
-            ScriptUtils.executeSqlScript(
-                    connection,
-                    new ClassPathResource("database/book/remove-all-from-books-table.sql")
-            );
-        }
-    }
-
 }

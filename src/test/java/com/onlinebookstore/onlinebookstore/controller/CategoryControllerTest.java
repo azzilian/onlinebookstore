@@ -18,12 +18,10 @@ import com.onlinebookstore.onlinebookstore.dto.category.CategoryRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.category.CategoryResponseDto;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
 import com.onlinebookstore.onlinebookstore.service.interfaces.CategoryService;
-import java.sql.Connection;
+import com.onlinebookstore.onlinebookstore.utils.TearDownDatabase;
 import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,21 +30,20 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CategoryControllerTest {
-
     @Autowired
     protected static MockMvc mockMvc;
+    private static TearDownDatabase tearDownDatabase;
 
     @MockBean
     private CategoryService categoryService;
@@ -67,17 +64,20 @@ class CategoryControllerTest {
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
                 .build();
-        teardown(dataSource);
+        tearDownDatabase.teardown(dataSource);
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp(@Autowired DataSource dataSource) {
         categoryResponseDto = new CategoryResponseDto(1L, "Fiction", "Fictional books");
+        tearDownDatabase.teardown(dataSource);
     }
 
     @Test
     @DisplayName("Get all categories")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Sql(scripts = "classpath:database/book/remove-all-from-all-tables.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getAllCategories_OK() throws Exception {
         Pageable pageable = PageRequest.of(0, 10);
         List<CategoryResponseDto> categories = Collections.singletonList(categoryResponseDto);
@@ -164,22 +164,5 @@ class CategoryControllerTest {
 
         verify(categoryService).delete(1L);
         verifyNoMoreInteractions(categoryService);
-    }
-
-    @AfterAll
-    static void afterAll(
-            @Autowired DataSource dataSource) {
-        teardown(dataSource);
-    }
-
-    @SneakyThrows
-    private static void teardown(DataSource dataSource) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(true);
-            ScriptUtils.executeSqlScript(
-                    connection,
-                    new ClassPathResource("database/book/remove-all-from-books-table.sql")
-            );
-        }
     }
 }

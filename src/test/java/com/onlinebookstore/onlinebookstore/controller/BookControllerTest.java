@@ -14,13 +14,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
 import com.onlinebookstore.onlinebookstore.service.interfaces.BookService;
+import com.onlinebookstore.onlinebookstore.utils.TearDownDatabase;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Set;
 import javax.sql.DataSource;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,9 +27,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,6 +38,7 @@ import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookControllerTest {
+    private static TearDownDatabase tearDownDatabase;
 
     @Autowired
     private static MockMvc mockMvc;
@@ -62,11 +59,11 @@ class BookControllerTest {
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
                 .build();
-        teardown(dataSource);
+        tearDownDatabase.teardown(dataSource);
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp(@Autowired DataSource dataSource) {
         Set<Long> categoryIds = new HashSet<>();
         categoryIds.add(1L);
 
@@ -78,6 +75,7 @@ class BookControllerTest {
                 .setDescription("test")
                 .setCoverImage("test@test.com")
                 .setCategoryIds(categoryIds);
+        TearDownDatabase.teardown(dataSource);
     }
 
     @Test
@@ -109,7 +107,6 @@ class BookControllerTest {
                 .andReturn();
 
         String jsonResponse = result.getResponse().getContentAsString();
-        System.out.println("Response JSON: " + jsonResponse);
 
         BookResponseDto actual = objectMapper.readValue(jsonResponse, BookResponseDto.class);
 
@@ -156,22 +153,5 @@ class BookControllerTest {
 
         verify(bookService).delete(id);
         verifyNoMoreInteractions(bookService);
-    }
-
-    @AfterAll
-    static void afterAll(
-            @Autowired DataSource dataSource) {
-        teardown(dataSource);
-    }
-
-    @SneakyThrows
-    private static void teardown(DataSource dataSource) {
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(true);
-            ScriptUtils.executeSqlScript(
-                    connection,
-                    new ClassPathResource("database/book/remove-all-from-books-table.sql")
-            );
-        }
     }
 }

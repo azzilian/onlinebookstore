@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
 import com.onlinebookstore.onlinebookstore.dto.book.BookResponseDto;
+import com.onlinebookstore.onlinebookstore.dto.category.CategoryResponseDto;
 import com.onlinebookstore.onlinebookstore.exeption.EntityNotFoundException;
 import com.onlinebookstore.onlinebookstore.mapper.BookMapper;
 import com.onlinebookstore.onlinebookstore.model.Book;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,15 +33,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.jdbc.Sql;
 
+import javax.sql.DataSource;
+
 @ExtendWith(MockitoExtension.class)
 @Sql(scripts = {
-        "classpath:database/book/remove-all-from-books-table.sql"
+        "classpath:database/book/remove-all-from-all-tables.sql"
 }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class BookServiceImplTest {
 
@@ -60,7 +66,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Find all books in database")
     @Sql(scripts = {
-            "classpath:database/book/remove-all-from-books-table.sql"
+            "classpath:database/book/remove-all-from-all-tables.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAllBooks_ValidData_OK() {
 
@@ -98,7 +104,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Find all books in empty database should throw exception")
     @Sql(scripts = {
-            "classpath:database/book/remove-all-from-books-table.sql"
+            "classpath:database/book/remove-all-from-all-tables.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAllBooks_EmptyData_NotOk() {
         Pageable pageable = PageRequest.of(0, 10);
@@ -119,7 +125,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Create new Book")
     @Sql(scripts = {
-            "classpath:database/book/remove-all-from-books-table.sql"
+            "classpath:database/book/remove-all-from-all-tables.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createNewBook_ValidData_OK() {
         Set<Long> categoryIds = new HashSet<>();
@@ -174,7 +180,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Update existing Book")
     @Sql(scripts = {
-            "classpath:database/book/remove-all-from-books-table.sql"
+            "classpath:database/book/remove-all-from-all-tables.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void changeExistingBook_ValidData_OK() {
         Book book = new Book();
@@ -215,7 +221,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Find book by book id")
     @Sql(scripts = {
-            "classpath:database/book/remove-all-from-books-table.sql"
+            "classpath:database/book/remove-all-from-all-tables.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findBookById_ValidData_OK() {
         Book book = new Book();
@@ -239,7 +245,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Delete book by id")
     @Sql(scripts = {
-            "classpath:database/book/remove-all-from-books-table.sql"
+            "classpath:database/book/remove-all-from-all-tables.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void deleteBookById_ValidData_OK() {
         Book book = new Book();
@@ -258,7 +264,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Find all book by category id")
     @Sql(scripts = {
-            "classpath:database/book/remove-all-from-books-table.sql"
+            "classpath:database/book/remove-all-from-all-tables.sql"
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getBooksByCategoryId_ValidData_OK() {
         Book book1 = new Book();
