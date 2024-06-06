@@ -48,6 +48,16 @@ In short here is the list of features it can do
 
 
 # Installation
+
+# System requirements
+
+To run app you will need Maven, Java, and MySQL installed, then use the following command to run the application:
+
+- Java 17
+- Maven 3.8+
+- Spring Boot 2.7+
+- MySQL 8.0+
+
 ## Setup Instructions
 
 Clone the repository:
@@ -62,17 +72,18 @@ Configure the database: Create a new MySQL database:
 
     CREATE DATABASE bookstoreDB;
 
-Update the application.properties file with your MySQL database credentials (Usage of environment variables recommended):
+Create the .env file with your MySQL database credentials,ports and environment variables:
 
-    spring.datasource.url=jdbc:mysql://localhost/bookstoreDB?serverTimezone=UTC
-    spring.datasource.username=${USERNAME}
-    spring.datasource.password=${PASSWORD}
-    spring.jackson.deserialization.fail-on-unknown-properties=true
-    spring.datasource.driver-class=com.mysql.cj.jdbc.Driver
-    spring.jpa.hibernate.ddl-auto=validate
-    spring.jpa.show-sql=true
-    jwt.expiration=${EXPIRATION}
-    jwt.secret=${SECRETKEY}
+    MYSQLDB_USER=*user_name*
+    MYSQLDB_ROOT_PASSWORD=*your_password*
+    MYSQLDB_DATABASE=bookstoreDB
+    MYSQLDB_LOCAL_PORT=3307
+    MYSQLDB_DOCKER_PORT=3306
+    SPRING_LOCAL_PORT=8080
+    SPRING_DOCKER_PORT=8080
+    DEBUG_PORT=5005
+    EXPIRATION=*token_expiration, example - 4200000000*
+    SECRETKEY=*your_secret_key, example - tW7vP9y8n5aD3kR6uS2xQ7fV1jL4zM5cB8eN2rT0hG3pK6dZ1sQ9aC4uF2wX7oJ*
 
 Install dependencies and build the project:
 
@@ -95,6 +106,12 @@ To run the tests, use the following Maven command:
     mvn test
 
 ## Installation using Docker
+
+Update docker-compose.yml, use variables from .env using "key" : "value":
+    
+    Example, variables for jwt token:
+      JWT_EXPIRATION: "${EXPIRATION}"
+      JWT_SECRET: "${SECRETKEY}"
 
 Build the Docker image:
 
@@ -383,33 +400,35 @@ Run the Docker compose:
 
 # Technologies used:
 
-Maven: Project management and dependency resolution.
+    Maven: Project management and dependency resolution.
+    
+    Spring Boot: Core framework for building the application.
+    
+    Spring Data JPA: Manages database interactions.
+    
+    Spring Security & JwtUtil: Handles authentication and authorization.
+    
+    MySQL: Main database for the application.
+    
+    Liquibase: Manages database migrations.
+    
+    H2 Database: In-memory database for testing.
+    
+    JUnit & Mockito: For unit testing and mocking.
+    
+    Swagger: API documentation and testing tool.
+    
+    Checkstyle: Ensures code style consistency.
+    
+    Docker: Application testing & deployment
 
-Spring Boot: Core framework for building the application.
 
-Spring Data JPA: Manages database interactions.
+# Challenges and Solutions
 
-Spring Security & JwtUtil: Handles authentication and authorization.
+    Security Implementation: Implemented JWT authentication for secure access.
+    Database Configuration: Used MySQL for local development and H2 for CI/CD testing.
+    API Design: Designed RESTful endpoints adhering to best practices.
 
-MySQL: Main database for the application.
-
-Liquibase: Manages database migrations.
-
-H2 Database: In-memory database for testing.
-
-JUnit & Mockito: For unit testing and mocking.
-
-Swagger: API documentation and testing tool.
-
-Checkstyle: Ensures code style consistency.
-
-Docker: Application testing & deployment
-
-# System requirements
-- Java 17
-- Maven 3.8+
-- Spring Boot 2.7+
-- MySQL 8.0+
 
 # Contributing
-Vladyslav Vyshynskyi
+[Vladyslav Vyshynskyi](https://www.linkedin.com/in/vladvyshynskij/)
