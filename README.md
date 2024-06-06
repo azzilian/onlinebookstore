@@ -432,3 +432,5 @@ Run the Docker compose:
 
 # Contributing
 [Vladyslav Vyshynskyi](https://www.linkedin.com/in/vladvyshynskij/)
+
+For more details about the project, you can click [here](https://github.com/azzilian/onlinebookstore)
