@@ -25,12 +25,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 class CategoryServiceImplTest {
-
-    private static final long CATEGORY_ID = 1L;
-    private static final String CATEGORY_NAME = "Fiction";
-    private static final String CATEGORY_DESCRIPTION = "Fictional books";
-    private static final String UPDATED_CATEGORY_NAME = "Science Fiction";
     private static final String UPDATED_CATEGORY_DESCRIPTION = "Science Fictional books";
+    private static final String UPDATED_CATEGORY_NAME = "Science Fiction";
+    private static final String CATEGORY_DESCRIPTION = "Fictional books";
+    private static final String CATEGORY_NAME = "Fiction";
+    private static final long CATEGORY_ID = 1L;
 
     @Mock
     private CategoryRepository categoryRepository;

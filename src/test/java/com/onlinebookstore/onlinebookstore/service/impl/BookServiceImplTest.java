@@ -36,19 +36,18 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceImplTest {
-
+    private static final String EXPECTED_MESSAGE = "Can't find any books";
+    private static final BigDecimal PRICE = BigDecimal.valueOf(10.50);
+    private static final String COVER_IMAGE = "test@test.com";
+    private static final String BOOK_TITLE_NEW = "Lenore";
+    private static final String AUTHOR = "EdgarAllanPoe";
+    private static final String BOOK_TITLE_1 = "Book 1";
+    private static final String BOOK_TITLE_2 = "Book 2";
+    private static final String ISBN = "9780306406157";
+    private static final String DESCRIPTION = "test";
     private static final long BOOK_ID_1 = 1L;
     private static final long BOOK_ID_2 = 2L;
     private static final long CATEGORY_ID = 1L;
-    private static final String BOOK_TITLE_1 = "Book 1";
-    private static final String BOOK_TITLE_2 = "Book 2";
-    private static final String BOOK_TITLE_NEW = "Lenore";
-    private static final String AUTHOR = "EdgarAllanPoe";
-    private static final String ISBN = "9780306406157";
-    private static final BigDecimal PRICE = BigDecimal.valueOf(10.50);
-    private static final String DESCRIPTION = "test";
-    private static final String COVER_IMAGE = "test@test.com";
-    private static final String EXPECTED_MESSAGE = "Can't find any books";
 
     @Mock
     private BookRepository bookRepository;

@@ -1,8 +1,10 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,13 +25,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -38,6 +38,14 @@ import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookControllerTest {
+    private static final BigDecimal BOOK_PRICE = BigDecimal.valueOf(10.50);
+    private static final String BOOK_COVER_IMAGE = "test@test.com";
+    private static final String BOOK_AUTHOR = "EdgarAllanPoe";
+    private static final String BOOK_ISBN = "9780306406157";
+    private static final String BOOK_DESCRIPTION = "test";
+    private static final String BOOK_TITLE = "Lenore";
+    private static final long BOOK_ID = 1L;
+
     private static TearDownDatabase tearDownDatabase;
 
     @Autowired
@@ -68,12 +76,12 @@ class BookControllerTest {
         categoryIds.add(1L);
 
         requestDto = new BookRequestDto()
-                .setTitle("Lenore")
-                .setAuthor("EdgarAllanPoe")
-                .setIsbn("9780306406157")
-                .setPrice(BigDecimal.valueOf(10.50))
-                .setDescription("test")
-                .setCoverImage("test@test.com")
+                .setTitle(BOOK_TITLE)
+                .setAuthor(BOOK_AUTHOR)
+                .setIsbn(BOOK_ISBN)
+                .setPrice(BOOK_PRICE)
+                .setDescription(BOOK_DESCRIPTION)
+                .setCoverImage(BOOK_COVER_IMAGE)
                 .setCategoryIds(categoryIds);
         TearDownDatabase.teardown(dataSource);
     }
@@ -81,12 +89,9 @@ class BookControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @DisplayName("Create new book")
-    @Sql(scripts = "classpath:database/book/remove-lenore-from-books-table.sql",
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createBook_ValidRequestDto_OK() throws Exception {
-
         BookResponseDto expected = new BookResponseDto()
-                .setId(1L)
+                .setId(BOOK_ID)
                 .setTitle(requestDto.getTitle())
                 .setAuthor(requestDto.getAuthor())
                 .setIsbn(requestDto.getIsbn())
@@ -95,21 +100,17 @@ class BookControllerTest {
                 .setCoverImage(requestDto.getCoverImage())
                 .setCategoryIds(requestDto.getCategoryIds());
 
-        Mockito.when(bookService.save(Mockito.any(BookRequestDto.class)))
+        when(bookService.save(any(BookRequestDto.class)))
                 .thenReturn(expected);
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-
         MvcResult result = mockMvc.perform(post("/api/books")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
-
         String jsonResponse = result.getResponse().getContentAsString();
-
         BookResponseDto actual = objectMapper.readValue(jsonResponse, BookResponseDto.class);
-
         assertTrue(EqualsBuilder.reflectionEquals(expected, actual, "id"));
     }
 
@@ -117,7 +118,8 @@ class BookControllerTest {
     @DisplayName("Get All Books - see all books in DB")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void getAllBooks_ValidData_OK() throws Exception {
-        mockMvc.perform(get("/api/books"))
+        mockMvc.perform(get("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -125,8 +127,7 @@ class BookControllerTest {
     @DisplayName("Find Book by Id")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findBookById_ValidData_OK() throws Exception {
-        Long id = 1L;
-        mockMvc.perform(get("/api/books/{id}", id))
+        mockMvc.perform(get("/api/books/{id}", BOOK_ID))
                 .andExpect(status().isOk());
     }
 
@@ -134,9 +135,8 @@ class BookControllerTest {
     @DisplayName("Update Book")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void updateBookById_ValidData_OK() throws Exception {
-        Long id = 1L;
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-        mockMvc.perform(put("/api/books/{id}", id)
+        mockMvc.perform(put("/api/books/{id}", BOOK_ID)
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
