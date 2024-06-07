@@ -27,7 +27,7 @@ Features
 
 # How It Works
 
-You can watch short video about the project, click [here](https://www.loom.com/share/cba8a24b884d4902a44c921a6c2d1906)
+You can watch short video about the project, click [here](https://vimeo.com/954707614?share=copy)
 
 Thanks to the integrated Liquibase, administrators do not need to manually create tables and relationships.
 They only need to create the database and then populate it with new products.
