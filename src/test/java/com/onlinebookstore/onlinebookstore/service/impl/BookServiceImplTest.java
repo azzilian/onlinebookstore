@@ -2,6 +2,7 @@ package com.onlinebookstore.onlinebookstore.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import com.onlinebookstore.onlinebookstore.dto.book.BookDtoWithoutCategoriesIds;
 import com.onlinebookstore.onlinebookstore.dto.book.BookRequestDto;
@@ -119,9 +120,9 @@ class BookServiceImplTest {
     void findAllBooks_ValidData_OK() {
         Page<Book> bookPage = new PageImpl<>(Arrays.asList(book1, book2));
 
-        Mockito.when(bookRepository.findAll(pageable)).thenReturn(bookPage);
-        Mockito.when(bookMapper.toDtoWithoutCategories(book1)).thenReturn(bookDto1);
-        Mockito.when(bookMapper.toDtoWithoutCategories(book2)).thenReturn(bookDto2);
+        when(bookRepository.findAll(pageable)).thenReturn(bookPage);
+        when(bookMapper.toDtoWithoutCategories(book1)).thenReturn(bookDto1);
+        when(bookMapper.toDtoWithoutCategories(book2)).thenReturn(bookDto2);
 
         List<BookDtoWithoutCategoriesIds> result = bookService.findAll(pageable);
 
@@ -134,7 +135,7 @@ class BookServiceImplTest {
     void findAllBooks_EmptyData_NotOk() {
         Page<Book> emptyBookPage = new PageImpl<>(Collections.emptyList());
 
-        Mockito.when(bookRepository.findAll(pageable)).thenReturn(emptyBookPage);
+        when(bookRepository.findAll(pageable)).thenReturn(emptyBookPage);
 
         Exception exception = assertThrows(EntityNotFoundException.class, () -> {
             bookService.findAll(pageable);
@@ -147,10 +148,10 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Create new Book")
     void createNewBook_ValidData_OK() {
-        Mockito.when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
-        Mockito.when(bookMapper.toModel(bookRequestDto)).thenReturn(book1);
-        Mockito.when(bookRepository.save(book1)).thenReturn(book1);
-        Mockito.when(bookMapper.toDto(book1)).thenReturn(bookResponseDto);
+        when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
+        when(bookMapper.toModel(bookRequestDto)).thenReturn(book1);
+        when(bookRepository.save(book1)).thenReturn(book1);
+        when(bookMapper.toDto(book1)).thenReturn(bookResponseDto);
 
         BookResponseDto savedBookDto = bookService.save(bookRequestDto);
 
@@ -166,10 +167,10 @@ class BookServiceImplTest {
         bookRequestDto.setTitle(BOOK_TITLE_2);
         bookResponseDto.setTitle(BOOK_TITLE_2);
 
-        Mockito.when(bookRepository.findById(BOOK_ID_1)).thenReturn(Optional.of(book1));
-        Mockito.when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
-        Mockito.when(bookRepository.save(book1)).thenReturn(book1);
-        Mockito.when(bookMapper.toDto(book1)).thenReturn(bookResponseDto);
+        when(bookRepository.findById(BOOK_ID_1)).thenReturn(Optional.of(book1));
+        when(categoryRepository.findAllById(categoryIds)).thenReturn(categories);
+        when(bookRepository.save(book1)).thenReturn(book1);
+        when(bookMapper.toDto(book1)).thenReturn(bookResponseDto);
 
         BookResponseDto updatedBookDto = bookService.update(BOOK_ID_1, bookRequestDto);
 
@@ -181,8 +182,8 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Find book by book id")
     void findBookById_ValidData_OK() {
-        Mockito.when(bookRepository.findById(BOOK_ID_1)).thenReturn(Optional.of(book1));
-        Mockito.when(bookMapper.toDto(book1)).thenReturn(bookResponseDto);
+        when(bookRepository.findById(BOOK_ID_1)).thenReturn(Optional.of(book1));
+        when(bookMapper.toDto(book1)).thenReturn(bookResponseDto);
 
         BookResponseDto foundBook = bookService.findById(BOOK_ID_1);
 
@@ -192,7 +193,7 @@ class BookServiceImplTest {
     @Test
     @DisplayName("Delete book by id")
     void deleteBookById_ValidData_OK() {
-        Mockito.when(bookRepository.findById(BOOK_ID_1)).thenReturn(Optional.of(book1));
+        when(bookRepository.findById(BOOK_ID_1)).thenReturn(Optional.of(book1));
         bookService.delete(BOOK_ID_1);
         Mockito.verify(bookRepository, Mockito.times(1)).deleteById(BOOK_ID_1);
     }
@@ -202,9 +203,9 @@ class BookServiceImplTest {
     void getBooksByCategoryId_ValidData_OK() {
         List<Book> books = Arrays.asList(book1, book2);
 
-        Mockito.when(bookRepository.findAllByCategoriesId(CATEGORY_ID, pageable)).thenReturn(books);
-        Mockito.when(bookMapper.toDtoWithoutCategories(book1)).thenReturn(bookDto1);
-        Mockito.when(bookMapper.toDtoWithoutCategories(book2)).thenReturn(bookDto2);
+        when(bookRepository.findAllByCategoriesId(CATEGORY_ID, pageable)).thenReturn(books);
+        when(bookMapper.toDtoWithoutCategories(book1)).thenReturn(bookDto1);
+        when(bookMapper.toDtoWithoutCategories(book2)).thenReturn(bookDto2);
 
         List<BookDtoWithoutCategoriesIds> result = bookService
                 .getBooksByCategoryId(CATEGORY_ID, pageable);

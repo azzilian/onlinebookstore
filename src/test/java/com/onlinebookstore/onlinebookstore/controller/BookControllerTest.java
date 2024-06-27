@@ -135,7 +135,7 @@ class BookControllerTest {
         String jsonResponse = result.getResponse().getContentAsString();
         BookResponseDto actualDto = objectMapper.readValue(jsonResponse, BookResponseDto.class);
         Assertions.assertNotNull(actualDto);
-        assertTrue(EqualsBuilder.reflectionEquals(expectedDto, actualDto, "id"));
+        assertTrue(EqualsBuilder.reflectionEquals(expectedDto, actualDto));
     }
 
     @Test

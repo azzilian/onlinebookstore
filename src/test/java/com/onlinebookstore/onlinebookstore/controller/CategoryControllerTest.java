@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,7 +25,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -82,7 +82,7 @@ class CategoryControllerTest {
         Pageable pageable = PageRequest.of(0, 10);
         List<CategoryResponseDto> categories = Collections.singletonList(categoryResponseDto);
 
-        Mockito.when(categoryService.findAll(pageable)).thenReturn(categories);
+        when(categoryService.findAll(pageable)).thenReturn(categories);
 
         mockMvc.perform(get("/api/categories")
                         .param("page", "0")
@@ -95,7 +95,7 @@ class CategoryControllerTest {
     @DisplayName("Get category by ID")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void getCategoryById_OK() throws Exception {
-        Mockito.when(categoryService.getById(anyLong())).thenReturn(categoryResponseDto);
+        when(categoryService.getById(anyLong())).thenReturn(categoryResponseDto);
 
         mockMvc.perform(get("/api/categories/{id}",
                         CATEGORY_ID_FIRST)
@@ -111,8 +111,8 @@ class CategoryControllerTest {
         categoryRequestDto.setName(CATEGORY_NAME)
                 .setDescription(CATEGORY_DESCRIPTION);
 
-        Mockito.when(categoryService
-                .save(any(CategoryRequestDto.class)))
+        when(categoryService
+                        .save(any(CategoryRequestDto.class)))
                 .thenReturn(categoryResponseDto);
 
         mockMvc.perform(post("/api/categories")
@@ -135,7 +135,7 @@ class CategoryControllerTest {
                 UPDATED_CATEGORY_NAME,
                 UPDATED_CATEGORY_DESCRIPTION);
 
-        Mockito.when(categoryService.update(anyLong(),
+        when(categoryService.update(anyLong(),
                 any(CategoryRequestDto.class))).thenReturn(updatedCategoryResponseDto);
 
         mockMvc.perform(put("/api/categories/{id}", CATEGORY_ID_FIRST)
