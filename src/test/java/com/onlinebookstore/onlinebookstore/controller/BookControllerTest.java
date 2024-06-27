@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,8 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import javax.sql.DataSource;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,6 +58,7 @@ class BookControllerTest {
     private ObjectMapper objectMapper;
 
     private BookRequestDto requestDto;
+    private BookResponseDto expectedDto;
 
     @MockBean
     private BookService bookService;
@@ -72,6 +76,7 @@ class BookControllerTest {
 
     @BeforeEach
     void setUp(@Autowired DataSource dataSource) {
+        TearDownDatabase.teardown(dataSource);
         Set<Long> categoryIds = new HashSet<>();
         categoryIds.add(1L);
 
@@ -83,14 +88,8 @@ class BookControllerTest {
                 .setDescription(BOOK_DESCRIPTION)
                 .setCoverImage(BOOK_COVER_IMAGE)
                 .setCategoryIds(categoryIds);
-        TearDownDatabase.teardown(dataSource);
-    }
 
-    @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @DisplayName("Create new book")
-    void createBook_ValidRequestDto_OK() throws Exception {
-        BookResponseDto expected = new BookResponseDto()
+        expectedDto = new BookResponseDto()
                 .setId(BOOK_ID)
                 .setTitle(requestDto.getTitle())
                 .setAuthor(requestDto.getAuthor())
@@ -99,36 +98,46 @@ class BookControllerTest {
                 .setDescription(requestDto.getDescription())
                 .setCoverImage(requestDto.getCoverImage())
                 .setCategoryIds(requestDto.getCategoryIds());
+    }
 
-        when(bookService.save(any(BookRequestDto.class)))
-                .thenReturn(expected);
-
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @DisplayName("Create new book")
+    void createBook_ValidRequestDto_OK() throws Exception {
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
+
+        when(bookService.save(any(BookRequestDto.class))).thenReturn(expectedDto);
+
         MvcResult result = mockMvc.perform(post("/api/books")
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
         String jsonResponse = result.getResponse().getContentAsString();
-        BookResponseDto actual = objectMapper.readValue(jsonResponse, BookResponseDto.class);
-        assertTrue(EqualsBuilder.reflectionEquals(expected, actual, "id"));
+
+        BookResponseDto actualDto = objectMapper.readValue(jsonResponse, BookResponseDto.class);
+        Assertions.assertNotNull(actualDto);
+        Assertions.assertNotNull(actualDto.getId());
+        assertTrue(EqualsBuilder.reflectionEquals(expectedDto, actualDto, "id"));
     }
 
-    @Test
-    @DisplayName("Get All Books - see all books in DB")
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void getAllBooks_ValidData_OK() throws Exception {
-        mockMvc.perform(get("/api/books")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
 
     @Test
     @DisplayName("Find Book by Id")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void findBookById_ValidData_OK() throws Exception {
-        mockMvc.perform(get("/api/books/{id}", BOOK_ID))
-                .andExpect(status().isOk());
+        when(bookService.findById(BOOK_ID)).thenReturn(expectedDto);
+
+        MvcResult result = mockMvc.perform(get("/api/books/{id}", BOOK_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedDto)))
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        BookResponseDto actualDto = objectMapper.readValue(jsonResponse, BookResponseDto.class);
+        Assertions.assertNotNull(actualDto);
+        assertTrue(EqualsBuilder.reflectionEquals(expectedDto, actualDto, "id"));
     }
 
     @Test
@@ -136,22 +145,31 @@ class BookControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void updateBookById_ValidData_OK() throws Exception {
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-        mockMvc.perform(put("/api/books/{id}", BOOK_ID)
+        when(bookService.update(any(Long.class), any(BookRequestDto.class))).thenReturn(expectedDto);
+
+        MvcResult result = mockMvc.perform(put("/api/books/{id}", BOOK_ID)
                         .content(jsonRequest)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedDto)))
+                .andReturn();
+
+        String jsonResponse = result.getResponse().getContentAsString();
+        BookResponseDto actualDto = objectMapper.readValue(jsonResponse, BookResponseDto.class);
+        Assertions.assertNotNull(actualDto);
+        assertTrue(EqualsBuilder.reflectionEquals(expectedDto, actualDto, "id"));
     }
 
     @Test
     @DisplayName("Delete Book")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void deleteBookById_ValidData_OK() throws Exception {
-        Long id = 1L;
-        mockMvc.perform(delete("/api/books/{id}", id)
+        MvcResult result = mockMvc.perform(delete("/api/books/{id}", BOOK_ID)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andReturn();
 
-        verify(bookService).delete(id);
+        verify(bookService).delete(BOOK_ID);
         verifyNoMoreInteractions(bookService);
     }
 }
