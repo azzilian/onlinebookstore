@@ -46,6 +46,7 @@ class CategoryControllerTest {
     private static final String CATEGORY_DESCRIPTION = "Fictional books";
     private static final String CATEGORY_NAME = "Fiction";
     private static final long CATEGORY_ID_FIRST = 1L;
+    private static final int CATEGORY_LIST_SIZE = 1;
     private static TearDownDatabase tearDownDatabase;
 
     @Autowired
@@ -97,7 +98,7 @@ class CategoryControllerTest {
         CategoryResponseDto[] actualDtoList = objectMapper.readValue(jsonResponse,
                 CategoryResponseDto[].class);
         Assertions.assertNotNull(actualDtoList);
-        Assertions.assertEquals(1, actualDtoList.length);
+        Assertions.assertEquals(CATEGORY_LIST_SIZE, actualDtoList.length);
         CategoryResponseDto actualDto = actualDtoList[0];
         Assertions.assertNotNull(actualDto);
         Assertions.assertNotNull(actualDto.id());
