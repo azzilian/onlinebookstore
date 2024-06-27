@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import javax.sql.DataSource;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,7 +120,6 @@ class BookControllerTest {
         assertTrue(EqualsBuilder.reflectionEquals(expectedDto, actualDto, "id"));
     }
 
-
     @Test
     @DisplayName("Find Book by Id")
     @WithMockUser(username = "admin", roles = {"ADMIN"})
@@ -145,7 +143,8 @@ class BookControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void updateBookById_ValidData_OK() throws Exception {
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
-        when(bookService.update(any(Long.class), any(BookRequestDto.class))).thenReturn(expectedDto);
+        when(bookService.update(any(Long.class),
+                any(BookRequestDto.class))).thenReturn(expectedDto);
 
         MvcResult result = mockMvc.perform(put("/api/books/{id}", BOOK_ID)
                         .content(jsonRequest)
