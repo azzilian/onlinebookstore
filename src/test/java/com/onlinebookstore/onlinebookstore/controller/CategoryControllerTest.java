@@ -1,5 +1,6 @@
 package com.onlinebookstore.onlinebookstore.controller;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -21,7 +22,7 @@ import com.onlinebookstore.onlinebookstore.utils.TearDownDatabase;
 import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,8 +34,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CategoryControllerTest {
@@ -84,11 +87,21 @@ class CategoryControllerTest {
 
         when(categoryService.findAll(pageable)).thenReturn(categories);
 
-        mockMvc.perform(get("/api/categories")
+        MvcResult result = mockMvc.perform(get("/api/categories")
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+        String jsonResponse = result.getResponse().getContentAsString();
+
+        CategoryResponseDto[] actualDtoList = objectMapper.readValue(jsonResponse,
+                CategoryResponseDto[].class);
+        Assertions.assertNotNull(actualDtoList);
+        Assertions.assertEquals(1, actualDtoList.length);
+        CategoryResponseDto actualDto = actualDtoList[0];
+        Assertions.assertNotNull(actualDto);
+        Assertions.assertNotNull(actualDto.id());
+        assertTrue(EqualsBuilder.reflectionEquals(categoryResponseDto, actualDto, "id"));
     }
 
     @Test
@@ -97,10 +110,19 @@ class CategoryControllerTest {
     void getCategoryById_OK() throws Exception {
         when(categoryService.getById(anyLong())).thenReturn(categoryResponseDto);
 
-        mockMvc.perform(get("/api/categories/{id}",
+        MvcResult result = mockMvc.perform(get("/api/categories/{id}",
                         CATEGORY_ID_FIRST)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResponse = result.getResponse().getContentAsString();
+
+        CategoryResponseDto actualDto = objectMapper.readValue(jsonResponse,
+                CategoryResponseDto.class);
+        Assertions.assertNotNull(actualDto);
+        Assertions.assertNotNull(actualDto.id());
+        assertTrue(EqualsBuilder.reflectionEquals(categoryResponseDto,
+                actualDto, "id"));
     }
 
     @Test
@@ -115,10 +137,19 @@ class CategoryControllerTest {
                         .save(any(CategoryRequestDto.class)))
                 .thenReturn(categoryResponseDto);
 
-        mockMvc.perform(post("/api/categories")
+        MvcResult result = mockMvc.perform(post("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequestDto)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andReturn();
+        String jsonResponse = result.getResponse().getContentAsString();
+
+        CategoryResponseDto actualDto = objectMapper.readValue(jsonResponse,
+                CategoryResponseDto.class);
+        Assertions.assertNotNull(actualDto);
+        Assertions.assertNotNull(actualDto.id());
+        assertTrue(EqualsBuilder.reflectionEquals(categoryResponseDto,
+                actualDto, "id"));
     }
 
     @Test
@@ -130,18 +161,20 @@ class CategoryControllerTest {
                 .setName(UPDATED_CATEGORY_NAME)
                 .setDescription(UPDATED_CATEGORY_DESCRIPTION);
 
-        CategoryResponseDto updatedCategoryResponseDto = new CategoryResponseDto(
-                CATEGORY_ID_FIRST,
-                UPDATED_CATEGORY_NAME,
-                UPDATED_CATEGORY_DESCRIPTION);
-
         when(categoryService.update(anyLong(),
-                any(CategoryRequestDto.class))).thenReturn(updatedCategoryResponseDto);
+                any(CategoryRequestDto.class))).thenReturn(categoryResponseDto);
 
-        mockMvc.perform(put("/api/categories/{id}", CATEGORY_ID_FIRST)
+        MvcResult result = mockMvc.perform(put("/api/categories/{id}",
+                        CATEGORY_ID_FIRST)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequestDto)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
+        String jsonResponse = result.getResponse().getContentAsString();
+        CategoryResponseDto actualDto = objectMapper.readValue(jsonResponse,
+                CategoryResponseDto.class);
+
+        assertTrue(EqualsBuilder.reflectionEquals(categoryResponseDto, actualDto));
     }
 
     @Test
@@ -154,10 +187,5 @@ class CategoryControllerTest {
 
         verify(categoryService).delete(CATEGORY_ID_FIRST);
         verifyNoMoreInteractions(categoryService);
-    }
-
-    @AfterEach
-    void tearDown(@Autowired DataSource dataSource) {
-        tearDownDatabase.teardown(dataSource);
     }
 }
